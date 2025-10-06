@@ -1,0 +1,95 @@
+.LoginForm {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+    padding: 20px;
+    border-radius: 10px;
+    width: 350px;
+}
+
+.FormContainer {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.FormGroup {
+    position: relative;
+}
+
+.InputIcon {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%) translateX(-190%);
+    color: #8f8f8f;
+    font-size: 25px;
+}
+
+input {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #4e4e4e;
+    border-radius: 12px;
+    font-size: 16px;
+    background-color: #ffffff;
+    transition: all 0.2s;
+    outline: none;
+    box-sizing: border-box;
+}
+
+input:focus {
+    border-color: #4285f4;
+    border-width: 1px;
+}
+
+.FormLabel {
+    position: absolute;
+    top: 14px;
+    left: 10px;
+    color: #8f8f8f;
+    pointer-events: none;
+    transition: all 0.2s;
+    padding: 0 4px;
+}
+
+input:focus + .FormLabel,
+input:not(:placeholder-shown) + .FormLabel {
+    transform: translateY(-22px);
+    color: #4285f4;
+    background-color: #ffffff;
+    font-size: 13px;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: #2d2222;
+    color: rgb(255, 255, 255);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.2s;
+    border: 1px solid #2d2222;
+    
+}
+
+button:hover {
+    background-color: #ffffff00;
+    color: #2d2222;
+    border: 1px solid #2d2222;
+}
+
+.Error {
+    position: absolute;
+    bottom: -33px;   /* đẩy xuống ngay dưới input */
+    left: 5px;
+    color: red;
+    font-size: 13px;
+    pointer-events: none; /* không ảnh hưởng khi click */
+}
