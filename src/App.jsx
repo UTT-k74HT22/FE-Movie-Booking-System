@@ -1,16 +1,15 @@
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login/Login";
+import Register from "./pages/Register/Register";
 
-function App() {
-  const handleLogin = (data) => {
-    console.log('Logging in with', data);
-    // ở đây gọi API login bằng fetch/axios...
-  };
-
+export default function App() {
   return (
-    <div className="App">
-      <Login onSubmit={handleLogin} />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/Register" element={<Register />} />
+      </Routes>
+    </Router>
   );
 }
-
-export default App;

@@ -1,21 +1,28 @@
 import { useState } from 'react';
 import styles from './LoginForm.module.css';
-import {UserOutlined, LockOutlined} from "@ant-design/icons"
+import authApi from '../../../api/authApi';
+
 
 function LoginForm({ onSubmit }) {
     const [form, setForm] = useState({ email: '', password: '' });
     const [errors, setErrors] = useState({});
-
+    const [submitting, setSubmitting] = useState(false);
     // hàm xử lý khi người dùng nhập dữ liệu vào input
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });  //lấy giá trị người dùng nhập theo thuộc tính name
         // mỗi khi người dùng nhập thì xóa lỗi đi
         setErrors({ ...errors, [e.target.name]: ''});
     };
+
+    // const validate = () => {
+    //     const newErrors = {};
+
+
     // hàm xử lý khi người dùng submit form
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault(); // ngăn chặn reload trang
-                let newErrors = { email: '', password: '' };
+        
+        let newErrors = { email: '', password: '' };
         let isValid = true;
 
         // validate email
@@ -24,7 +31,7 @@ function LoginForm({ onSubmit }) {
             isValid = false;
         }
         // validate password
-        else if (!form.password.trim()) {
+        if (!form.password.trim()) {
             newErrors.password = "Password không được để trống!";
             isValid = false;
         }
@@ -32,7 +39,23 @@ function LoginForm({ onSubmit }) {
         setErrors(newErrors);
 
         if (isValid) {
-            onSubmit(form);
+            setSubmitting(true);
+
+            try {
+
+                if (typeof onSubmit === 'function') {
+                    await onSubmit(form);
+                    setSubmitting(false);
+                    return;
+                }
+
+                const result = await authApi.login(form.email, form.password);
+                console.log("Kết quả trả về từ API:", result);
+            
+            } catch (error) {
+                    console.error("Lỗi khi gọi API login:", error);
+                    setSubmitting(false);
+            }
         }
     }
     return (
@@ -40,7 +63,6 @@ function LoginForm({ onSubmit }) {
         <form className={styles.LoginForm} onSubmit={handleSubmit}>
             <div className={styles.FormContainer}>
                 <div className={styles.FormGroup}>
-                    <UserOutlined className={styles.InputIcon} />
                     <input
                         type="email"
                         name='email'
@@ -52,7 +74,6 @@ function LoginForm({ onSubmit }) {
                     {errors.email && <p className={styles.Error}>{errors.email}</p>}
                 </div>
                 <div className={styles.FormGroup}>
-                    <LockOutlined className={styles.InputIcon} />
                     <input
                         type="password"
                         name='password'
@@ -64,7 +85,10 @@ function LoginForm({ onSubmit }) {
                     {errors.password && <p className={styles.Error}>{errors.password}</p>}
                 </div>
             </div>
-            <button type="submit">Login</button>
+            <button type="submit" disabled={submitting}>Login</button>
+            <div className={styles.ForgotPassword}>
+                <a href="#">Forgot Password?</a>
+            </div>
         </form>
     );
 }
