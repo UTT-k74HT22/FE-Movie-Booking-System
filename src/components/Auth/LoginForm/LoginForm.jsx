@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import styles from './LoginForm.module.css';
 import authApi from '../../../api/authApi';
+import { Link } from 'react-router-dom';
 
 
-function LoginForm({ onSubmit }) {
+const LoginForm = () => {
     const [form, setForm] = useState({ email: '', password: '' });
     const [errors, setErrors] = useState({});
     const [submitting, setSubmitting] = useState(false);
@@ -43,12 +44,6 @@ function LoginForm({ onSubmit }) {
 
             try {
 
-                if (typeof onSubmit === 'function') {
-                    await onSubmit(form);
-                    setSubmitting(false);
-                    return;
-                }
-
                 const result = await authApi.login(form.email, form.password);
                 console.log("Kết quả trả về từ API:", result);
             
@@ -61,6 +56,7 @@ function LoginForm({ onSubmit }) {
     return (
         // form login
         <form className={styles.LoginForm} onSubmit={handleSubmit}>
+            <h1>login</h1>
             <div className={styles.FormContainer}>
                 <div className={styles.FormGroup}>
                     <input
@@ -89,6 +85,9 @@ function LoginForm({ onSubmit }) {
             <div className={styles.ForgotPassword}>
                 <a href="#">Forgot Password?</a>
             </div>
+                <p>Don't have an account? <Link to="/Register" className={styles.registerLink}>
+                Register
+                </Link></p>
         </form>
     );
 }
