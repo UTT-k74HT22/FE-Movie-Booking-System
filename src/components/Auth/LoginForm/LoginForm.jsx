@@ -57,7 +57,7 @@ const LoginForm = () => {
         // wrapper centers the form in the viewport
         <div className={styles.Wrapper}>
             <form className={styles.LoginForm} onSubmit={handleSubmit}>
-                <h1>login</h1>
+                <h1>Login</h1>
                 <div className={styles.FormContainer}>
                     <div className={styles.FormGroup}>
                         <input
