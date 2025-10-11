@@ -8,6 +8,21 @@
     padding: 20px;
     border-radius: 10px;
     width: 300px;
+    box-shadow: 5px 5px 10px rgba(0,0,0,0.3); /* tạo bóng đổ nhẹ */
+}
+
+h1 {
+    font-size: 40px;
+    font-weight: bold;
+}
+/* Wrapper to center the login form in the viewport */
+.Wrapper {
+    min-height: 100vh; /* full viewport height */
+    display: flex;
+    align-items: center; /* vertical center */
+    justify-content: center; /* horizontal center */
+    padding: 20px; /* small spacing on narrow screens */
+    box-sizing: border-box;
 }
 
 .FormContainer {

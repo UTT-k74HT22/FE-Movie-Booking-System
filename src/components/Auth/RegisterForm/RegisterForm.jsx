@@ -41,7 +41,7 @@ const RegisterForm = () => {
             newErrors.email = "Email không được để trống!";
             isValid = false;
         }
-        
+
         // validate password
         if (!form.password.trim()) {
             newErrors.password = 'Password không được để trống!';
@@ -72,59 +72,61 @@ const RegisterForm = () => {
     }
     return (
         // form register
-        <form className={styles.RegisterForm} onSubmit={handleSubmit}>
-            <h1>Register</h1>
-            <div className={styles.FormContainer}>
-                <div className={styles.FormGroup}>
-                    <input
-                        type="text"
-                        name='username'
-                        placeholder=" "
-                        value={form.username}
-                        onChange={handleChange}
-                    />
-                    <label htmlFor="username" className={styles.FormLabel}>Username</label>
-                    {errors.username && <p className={styles.Error}>{errors.username}</p>}
+        <div className={styles.Wrapper}>
+            <form className={styles.RegisterForm} onSubmit={handleSubmit}>
+                <h2>Register</h2>
+                <div className={styles.FormContainer}>
+                    <div className={styles.FormGroup}>
+                        <input
+                            type="text"
+                            name='username'
+                            placeholder=" "
+                            value={form.username}
+                            onChange={handleChange}
+                        />
+                        <label htmlFor="username" className={styles.FormLabel}>Username</label>
+                        {errors.username && <p className={styles.Error}>{errors.username}</p>}
+                    </div>
+                    <div className={styles.FormGroup}>
+                        <input
+                            type="email"
+                            name='email'
+                            placeholder=" "
+                            value={form.email}
+                            onChange={handleChange}
+                        />
+                        <label htmlFor="email" className={styles.FormLabel}>Email</label>
+                        {errors.email && <p className={styles.Error}>{errors.email}</p>}
+                    </div>
+                    <div className={styles.FormGroup}>
+                        <input
+                            type="password"
+                            name='password'
+                            placeholder=" "
+                            value={form.password}
+                            onChange={handleChange}
+                        />
+                        <label htmlFor="password" className={styles.FormLabel}>Password</label>
+                        {errors.password && <p className={styles.Error}>{errors.password}</p>}
+                    </div>
+                    <div className={styles.FormGroup}>
+                        <input
+                            type="password"
+                            name='confirmPassword'
+                            placeholder=" "
+                            value={form.confirmPassword}
+                            onChange={handleChange}
+                        />
+                        <label htmlFor="confirmPassword" className={styles.FormLabel}>Confirm Password</label>
+                        {errors.confirmPassword && <p className={styles.Error}>{errors.confirmPassword}</p>}
+                    </div>
                 </div>
-                <div className={styles.FormGroup}>
-                    <input
-                        type="email"
-                        name='email'
-                        placeholder=" "
-                        value={form.email}
-                        onChange={handleChange}
-                    />
-                    <label htmlFor="email" className={styles.FormLabel}>Email</label>
-                    {errors.email && <p className={styles.Error}>{errors.email}</p>}
-                </div>
-                <div className={styles.FormGroup}>
-                    <input
-                        type="password"
-                        name='password'
-                        placeholder=" "
-                        value={form.password}
-                        onChange={handleChange}
-                    />
-                    <label htmlFor="password" className={styles.FormLabel}>Password</label>
-                    {errors.password && <p className={styles.Error}>{errors.password}</p>}
-                </div>
-                <div className={styles.FormGroup}>
-                    <input
-                        type="password"
-                        name='confirmPassword'
-                        placeholder=" "
-                        value={form.confirmPassword}
-                        onChange={handleChange}
-                    />
-                    <label htmlFor="confirmPassword" className={styles.FormLabel}>Confirm Password</label>
-                    {errors.confirmPassword && <p className={styles.Error}>{errors.confirmPassword}</p>}
-                </div>
-            </div>
-            <button type="submit" disabled={submitting}>Register</button>
-                <p>You already have an account <Link to="/" className={styles.registerLink}>
-                Login
-                </Link></p>
-        </form>
+                <button type="submit" disabled={submitting}>Register</button>
+                    <p>You already have an account <Link to="/" className={styles.registerLink}>
+                    Login
+                    </Link></p>
+            </form>
+        </div>
     );
 }
 export default RegisterForm;
