@@ -5,6 +5,7 @@ import * as httpRequest from '../utils/httpRequest';
 const authApi = {
   login: async (email, password) => {
     try {
+      console.log('Sending login request with:', { email, password });
       // gọi POST API login
       const data = await httpRequest.post('/auth/login', {
         email,
