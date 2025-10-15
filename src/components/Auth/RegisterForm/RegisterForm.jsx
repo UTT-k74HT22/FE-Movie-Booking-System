@@ -1,130 +1,109 @@
-import React, { useState } from 'react';
-import styles from './RegisterForm.module.css';
-import authApi from '../../../api/authApi';
-import { Link } from 'react-router-dom';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify"; 
+import authApi from "../../../api/authApi";
+import styles from "./RegisterForm.module.css";
 
 const RegisterForm = () => {
+  const navigate = useNavigate();
 
-    const [form, setForm] = useState({ 
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
-});
-    const [errors, setErrors] = useState({});
-    const [submitting, setSubmitting] = useState(false);
-    // hàm xử lý khi người dùng nhập dữ liệu vào input
-    const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });  //lấy giá trị người dùng nhập theo thuộc tính name
-        // mỗi khi người dùng nhập thì xóa lỗi đi
-        setErrors({ ...errors, [e.target.name]: ''});
-    };
+  const [form, setForm] = useState({
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
 
-    // const validate = () => {
-    //     const newErrors = {};
+  const [loading, setLoading] = useState(false);
 
+  const validate = (values) => {
+    if (!values.username.trim()) return "Username không được để trống!";
+    if (!values.email.trim()) return "Email không được để trống!";
+    if (!values.password.trim()) return "Password không được để trống!";
+    if (!values.confirmPassword.trim())
+      return "Confirm Password không được để trống!";
+    if (values.confirmPassword !== values.password)
+      return "Password không khớp!";
+    return null;
+  };
 
-    // hàm xử lý khi người dùng submit form
-    const handleSubmit = async (e) => {
-        e.preventDefault(); // ngăn chặn reload trang
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
 
-        let newErrors = { username: '', email: '', password: '' };
-        let isValid = true;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-        if (!form.username.trim()) {
-            newErrors.username = "Username không được để trống!";
-            isValid = false;
-        }
-
-        // validate email
-        if (!form.email.trim()) {
-            newErrors.email = "Email không được để trống!";
-            isValid = false;
-        }
-        
-        // validate password
-        if (!form.password.trim()) {
-            newErrors.password = 'Password không được để trống!';
-            isValid = false;
-        } if (!form.confirmPassword.trim()) {
-            newErrors.confirmPassword = "Confirm Password không được để trống!";
-            isValid = false;
-
-        } else if (form.confirmPassword !== form.password) {
-                newErrors.confirmPassword = "Password không khớp!";
-                isValid = false;
-        }
-
-        setErrors(newErrors);
-
-        if (isValid) {
-            setSubmitting(true);
-
-            try {
-                const result = await authApi.register(form.username, form.email, form.password);
-                console.log("Kết quả trả về từ API:", result);
-            } catch (error) {
-                console.error("Lỗi khi gọi API register:", error);
-            } finally {
-                setSubmitting(false);
-            }
-        }
+    const errorMsg = validate(form);
+    if (errorMsg) {
+      toast.warning(errorMsg); 
+      return;
     }
-    return (
-        // form register
-        <form className={styles.RegisterForm} onSubmit={handleSubmit}>
-            <h1>Register</h1>
-            <div className={styles.FormContainer}>
-                <div className={styles.FormGroup}>
-                    <input
-                        type="text"
-                        name='username'
-                        placeholder=" "
-                        value={form.username}
-                        onChange={handleChange}
-                    />
-                    <label htmlFor="username" className={styles.FormLabel}>Username</label>
-                    {errors.username && <p className={styles.Error}>{errors.username}</p>}
-                </div>
-                <div className={styles.FormGroup}>
-                    <input
-                        type="email"
-                        name='email'
-                        placeholder=" "
-                        value={form.email}
-                        onChange={handleChange}
-                    />
-                    <label htmlFor="email" className={styles.FormLabel}>Email</label>
-                    {errors.email && <p className={styles.Error}>{errors.email}</p>}
-                </div>
-                <div className={styles.FormGroup}>
-                    <input
-                        type="password"
-                        name='password'
-                        placeholder=" "
-                        value={form.password}
-                        onChange={handleChange}
-                    />
-                    <label htmlFor="password" className={styles.FormLabel}>Password</label>
-                    {errors.password && <p className={styles.Error}>{errors.password}</p>}
-                </div>
-                <div className={styles.FormGroup}>
-                    <input
-                        type="password"
-                        name='confirmPassword'
-                        placeholder=" "
-                        value={form.confirmPassword}
-                        onChange={handleChange}
-                    />
-                    <label htmlFor="confirmPassword" className={styles.FormLabel}>Confirm Password</label>
-                    {errors.confirmPassword && <p className={styles.Error}>{errors.confirmPassword}</p>}
-                </div>
+
+    setLoading(true);
+
+    try {
+      await authApi.register({
+        username: form.username,
+        email: form.email,
+        password: form.password,
+      });
+
+      toast.success("Đăng ký thành công! Vui lòng kiểm tra email để kích hoạt tài khoản.");
+      navigate("/active", { state: { email: form.email } });
+    } catch (error) {
+      console.error("[REGISTER] error:", error);
+      toast.error("Đăng ký thất bại. Vui lòng thử lại.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className={styles.Wrapper}>
+      <form className={styles.RegisterForm} onSubmit={handleSubmit}>
+        <h2>Register</h2>
+
+        <div className={styles.FormContainer}>
+          {["username", "email", "password", "confirmPassword"].map((field) => (
+            <div key={field} className={styles.FormGroup}>
+              <input
+                type={
+                  field.includes("password")
+                    ? "password"
+                    : field === "email"
+                    ? "email"
+                    : "text"
+                }
+                name={field}
+                placeholder=" "
+                value={form[field]}
+                onChange={handleChange}
+                disabled={loading}
+              />
+              <label htmlFor={field} className={styles.FormLabel}>
+                {field === "confirmPassword"
+                  ? "Confirm Password"
+                  : field.charAt(0).toUpperCase() + field.slice(1)}
+              </label>
             </div>
-            <button type="submit" disabled={submitting}>Register</button>
-                <p>You already have an account <Link to="/" className={styles.registerLink}>
-                Login
-                </Link></p>
-        </form>
-    );
-}
+          ))}
+        </div>
+
+        <button type="submit" disabled={loading}>
+          {loading ? "Registering..." : "Register"}
+        </button>
+
+        <p>
+          Already have an account?{" "}
+          <Link to="/login" className={styles.registerLink}>
+            Login
+          </Link>
+        </p>
+      </form>
+    </div>
+  );
+};
+
 export default RegisterForm;
