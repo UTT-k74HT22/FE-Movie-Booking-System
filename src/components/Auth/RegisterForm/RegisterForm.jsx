@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify"; 
+import { toast } from "react-toastify";
+import { TextField, Button, Box, Typography, Paper } from "@mui/material";
 import authApi from "../../../api/authApi";
-import styles from "./RegisterForm.module.css";
 
 const RegisterForm = () => {
   const navigate = useNavigate();
@@ -61,48 +61,60 @@ const RegisterForm = () => {
   };
 
   return (
-    <div className={styles.Wrapper}>
-      <form className={styles.RegisterForm} onSubmit={handleSubmit}>
-        <h2>Register</h2>
-
-        <div className={styles.FormContainer}>
-          {["username", "email", "password", "confirmPassword"].map((field) => (
-            <div key={field} className={styles.FormGroup}>
-              <input
-                type={
-                  field.includes("password")
-                    ? "password"
-                    : field === "email"
-                    ? "email"
-                    : "text"
-                }
-                name={field}
-                placeholder=" "
-                value={form[field]}
-                onChange={handleChange}
-                disabled={loading}
-              />
-              <label htmlFor={field} className={styles.FormLabel}>
-                {field === "confirmPassword"
-                  ? "Confirm Password"
-                  : field.charAt(0).toUpperCase() + field.slice(1)}
-              </label>
-            </div>
-          ))}
-        </div>
-
-        <button type="submit" disabled={loading}>
-          {loading ? "Registering..." : "Register"}
-        </button>
-
-        <p>
-          Already have an account?{" "}
-          <Link to="/login" className={styles.registerLink}>
-            Login
-          </Link>
-        </p>
-      </form>
-    </div>
+    <Box sx={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f5f6fa' }}>
+      <Paper elevation={4} sx={{ p: 4, borderRadius: 4, minWidth: 340 }}>
+        <Typography variant="h5" color="success.main" mb={2} fontWeight={700} align="center">Đăng ký</Typography>
+        <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <TextField
+            label="Tên đăng nhập"
+            name="username"
+            value={form.username}
+            onChange={handleChange}
+            required
+            fullWidth
+            autoFocus
+            disabled={loading}
+          />
+          <TextField
+            label="Email"
+            name="email"
+            type="email"
+            value={form.email}
+            onChange={handleChange}
+            required
+            fullWidth
+            disabled={loading}
+          />
+          <TextField
+            label="Mật khẩu"
+            name="password"
+            type="password"
+            value={form.password}
+            onChange={handleChange}
+            required
+            fullWidth
+            disabled={loading}
+          />
+          <TextField
+            label="Nhập lại mật khẩu"
+            name="confirmPassword"
+            type="password"
+            value={form.confirmPassword}
+            onChange={handleChange}
+            required
+            fullWidth
+            disabled={loading}
+          />
+          <Button type="submit" variant="contained" color="success" disabled={loading} size="large" sx={{ mt: 1, borderRadius: 2 }}>
+            {loading ? "Đang đăng ký..." : "Đăng ký"}
+          </Button>
+          <Typography align="center" mt={2} fontSize={15}>
+            Đã có tài khoản?{' '}
+            <Link to="/login" style={{ color: '#388e3c', fontWeight: 600, textDecoration: 'none' }}>Đăng nhập</Link>
+          </Typography>
+        </Box>
+      </Paper>
+    </Box>
   );
 };
 

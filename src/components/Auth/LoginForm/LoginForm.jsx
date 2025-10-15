@@ -1,7 +1,10 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import styles from './LoginForm.module.css';
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { TextField, Button, Box, Typography, Paper } from "@mui/material";
 import authApi from '../../../api/authApi';
+
+
+// ...existing code...
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -45,7 +48,7 @@ const LoginForm = () => {
         password: form.password,
       });
       localStorage.setItem('accessToken', result.accessToken);
-      navigate('/dashboard');
+      navigate('/admin/dashboard');
     } catch (error) {
       setApiError(error?.message || 'Đăng nhập thất bại. Vui lòng thử lại.');
     } finally {
@@ -54,53 +57,46 @@ const LoginForm = () => {
   };
 
   return (
-    <div className={styles.Wrapper}>
-      <form className={styles.LoginForm} onSubmit={handleSubmit}>
-        <h1>Login</h1>
-        <div className={styles.FormContainer}>
-          <div className={styles.FormGroup}>
-            <input
-              type="text"
-              name="username"
-              placeholder=" "
-              value={form.username}
-              onChange={handleChange}
-            />
-            <label className={styles.FormLabel}>Username</label>
-            {errors.username && <p className={styles.Error}>{errors.username}</p>}
-          </div>
-
-          <div className={styles.FormGroup}>
-            <input
-              type="password"
-              name="password"
-              placeholder=" "
-              value={form.password}
-              onChange={handleChange}
-            />
-            <label className={styles.FormLabel}>Password</label>
-            {errors.password && <p className={styles.Error}>{errors.password}</p>}
-          </div>
-        </div>
-
-        {apiError && <p className={styles.Error}>{apiError}</p>}
-
-        <button type="submit" disabled={submitting}>
-          {submitting ? 'Logging in...' : 'Login'}
-        </button>
-
-        <div className={styles.ForgotPassword}>
-          <a href="#">Forgot Password?</a>
-        </div>
-
-        <p>
-          Don't have an account?{' '}
-          <Link to="/register" className={styles.registerLink}>
-            Register
-          </Link>
-        </p>
-      </form>
-    </div>
+    <Box sx={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f5f6fa' }}>
+      <Paper elevation={4} sx={{ p: 4, borderRadius: 4, minWidth: 340 }}>
+        <Typography variant="h5" color="primary" mb={2} fontWeight={700} align="center">Đăng nhập</Typography>
+        <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <TextField
+            label="Tên đăng nhập"
+            name="username"
+            value={form.username}
+            onChange={handleChange}
+            required
+            fullWidth
+            autoFocus
+            error={!!errors.username}
+            helperText={errors.username}
+          />
+          <TextField
+            label="Mật khẩu"
+            name="password"
+            type="password"
+            value={form.password}
+            onChange={handleChange}
+            required
+            fullWidth
+            error={!!errors.password}
+            helperText={errors.password}
+          />
+          {apiError && <Typography color="error" fontSize={14}>{apiError}</Typography>}
+          <Button type="submit" variant="contained" color="primary" disabled={submitting} size="large" sx={{ mt: 1, borderRadius: 2 }}>
+            {submitting ? "Đang xử lý..." : "Đăng nhập"}
+          </Button>
+          <Box sx={{ textAlign: 'right', mt: 1 }}>
+            <Link to="#" style={{ color: '#1976d2', textDecoration: 'none', fontSize: 14 }}>Quên mật khẩu?</Link>
+          </Box>
+          <Typography align="center" mt={2} fontSize={15}>
+            Chưa có tài khoản?{' '}
+            <Link to="/register" style={{ color: '#1976d2', fontWeight: 600, textDecoration: 'none' }}>Đăng ký</Link>
+          </Typography>
+        </Box>
+      </Paper>
+    </Box>
   );
 };
 

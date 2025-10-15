@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { TextField, Button, Box, Typography, Paper } from "@mui/material";
 import authApi from "../../../api/authApi";
-import styles from "./ActiveForm.module.css";
 
 export default function ActiveForm() {
   const [otp, setOtp] = useState("");
@@ -38,40 +38,31 @@ export default function ActiveForm() {
   };
 
   return (
-    <div className={styles.Wrapper}>
-      <form className={styles.ActiveForm} onSubmit={handleSubmit}>
-        <h2>Kích hoạt tài khoản</h2>
-
-        <div className={styles.FormContainer}>
-          <div className={styles.FormGroup}>
-            <input
-              type="text"
-              name="otp"
-              placeholder=" "
-              value={otp}
-              onChange={(e) => setOtp(e.target.value)}
-              disabled={loading}
-            />
-            <label htmlFor="otp" className={styles.FormLabel}>
-              Mã OTP
-            </label>
-            {error && <p className={styles.Error}>{error}</p>}
-          </div>
-        </div>
-
-        <button type="submit" disabled={loading}>
-          {loading ? "Đang kích hoạt..." : "Xác nhận"}
-        </button>
-
-        <p className={styles.SubText}>
-          Mã OTP đã được gửi đến email: <br />
-          <strong>{email}</strong>
-        </p>
-
-        <Link to="/register" className={styles.BackLink}>
-          ← Quay lại đăng ký
-        </Link>
-      </form>
-    </div>
+    <Box sx={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f5f6fa' }}>
+      <Paper elevation={4} sx={{ p: 4, borderRadius: 4, minWidth: 340 }}>
+        <Typography variant="h5" color="warning.main" mb={2} fontWeight={700} align="center">Kích hoạt tài khoản</Typography>
+        <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <TextField
+            label="Mã OTP"
+            name="otp"
+            value={otp}
+            onChange={(e) => setOtp(e.target.value)}
+            required
+            fullWidth
+            disabled={loading}
+          />
+          {error && <Typography color="error" fontSize={14}>{error}</Typography>}
+          <Button type="submit" variant="contained" color="warning" disabled={loading} size="large" sx={{ mt: 1, borderRadius: 2 }}>
+            {loading ? "Đang kích hoạt..." : "Xác nhận"}
+          </Button>
+          <Typography align="center" mt={2} fontSize={15}>
+            Mã OTP đã được gửi đến email: <strong>{email}</strong>
+          </Typography>
+          <Box sx={{ textAlign: 'center', mt: 2 }}>
+            <Link to="/register" style={{ color: '#fbc02d', fontWeight: 600, textDecoration: 'none' }}>← Quay lại đăng ký</Link>
+          </Box>
+        </Box>
+      </Paper>
+    </Box>
   );
 }
