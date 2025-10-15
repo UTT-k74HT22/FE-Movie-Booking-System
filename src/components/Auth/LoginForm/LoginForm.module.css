@@ -1,26 +1,40 @@
+/* Wrapper để center form */
+.Wrapper {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
 .LoginForm {
-    position: relative;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
     gap: 50px;
     padding: 20px;
-    border-radius: 10px;
-    width: 300px;
+    width: 320px;
+    border-radius: 12px;
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+    background-color: #fff;
+}
+
+.LoginForm h1 {
+    font-size: 36px;
+    font-weight: bold;
 }
 
 .FormContainer {
     display: flex;
-    width: 100%;
     flex-direction: column;
-    gap: 40px;
+    width: 100%;
+    gap: 30px;
 }
 
 .FormGroup {
     position: relative;
 }
-
 
 input {
     width: 100%;
@@ -28,59 +42,76 @@ input {
     border: 1px solid #4e4e4e;
     border-radius: 12px;
     font-size: 16px;
-    background-color: #ffffff;
-    transition: all 0.2s;
     outline: none;
+    background-color: #fff;
     box-sizing: border-box;
+    transition: all 0.2s;
 }
 
 input:focus {
-    border-width: 1px;
-    background-color: #ffffff;
+    border-color: #333;
 }
 
 .FormLabel {
     position: absolute;
-    top: 15px;
-    left: 10px;
-    color: #8f8f8f;
+    top: 14px;
+    left: 12px;
+    font-size: 14px;
+    color: #888;
     pointer-events: none;
     transition: all 0.2s;
+    background-color: #fff;
     padding: 0 4px;
 }
 
 input:focus + .FormLabel,
 input:not(:placeholder-shown) + .FormLabel {
     transform: translateY(-22px);
-    background-color: #ffffff;
-    font-size: 13px;
+    font-size: 12px;
+    color: #555;
 }
 
 button {
     width: 100%;
     padding: 12px;
-    background-color: var(--color-background);
-    color: rgb(255, 255, 255);
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
     font-size: 16px;
-    transition: all 0.2s;
+    border-radius: 12px;
     border: 1px solid #2d2222;
-    
+    background-color: #2d2222;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.2s;
 }
 
-button:hover {
-    background-color: #ffffff00;
+button:hover:enabled {
+    background-color: #fff;
     color: #2d2222;
-    border: 1px solid #2d2222;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 .Error {
     position: absolute;
-    bottom: -20px;   /* đẩy xuống ngay dưới input */
-    left: 5px;
-    color: var(--color-error);
+    bottom: -20px;
+    left: 8px;
     font-size: 13px;
-    pointer-events: none; /* không ảnh hưởng khi click */
+    color: red;
+}
+
+.ForgotPassword {
+    width: 100%;
+    text-align: right;
+}
+
+.registerLink {
+    color: #2d2222;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.registerLink:hover {
+    text-decoration: underline;
 }

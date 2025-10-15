@@ -11,14 +11,19 @@ const authApi = {
      */
     login: async (request) => {
         try {
-            const response = await httpRequest.post('/auth/login', request);
-            console.log('[AUTH API] Login success:', response);
-            return response;
+          const response = await httpRequest.post(
+            '/auth/login',
+            request, // request = { username, password }
+            { headers: { 'Content-Type': 'application/json' } } // gửi JSON
+          );
+          console.log('[AUTH API] Login success:', response.data);
+          return response.data; // trả về data trực tiếp
         } catch (error) {
-            console.error('[AUTH API] Login error:', error);
-            throw error;
+          console.error('[AUTH API] Login error:', error.response?.data || error.message);
+          // throw lỗi API về component để handle
+          throw error.response?.data || error;
         }
-    },
+      },
 
     /**
      * Đăng ký tài khoản
