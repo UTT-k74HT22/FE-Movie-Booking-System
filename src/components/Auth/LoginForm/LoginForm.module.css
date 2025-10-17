@@ -1,40 +1,41 @@
-/* Wrapper để center form */
-.Wrapper {
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    box-sizing: border-box;
-}
-
 .LoginForm {
+    position: relative;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
     gap: 50px;
     padding: 20px;
-    width: 320px;
-    border-radius: 12px;
-    box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
-    background-color: #fff;
+    border-radius: 10px;
+    width: 300px;
+    box-shadow: 5px 5px 10px rgba(0,0,0,0.3); /* tạo bóng đổ nhẹ */
 }
 
-.LoginForm h1 {
-    font-size: 36px;
+h1 {
+    font-size: 40px;
     font-weight: bold;
+}
+/* Wrapper to center the login form in the viewport */
+.Wrapper {
+    min-height: 100vh; /* full viewport height */
+    display: flex;
+    align-items: center; /* vertical center */
+    justify-content: center; /* horizontal center */
+    padding: 20px; /* small spacing on narrow screens */
+    box-sizing: border-box;
 }
 
 .FormContainer {
     display: flex;
-    flex-direction: column;
     width: 100%;
-    gap: 30px;
+    flex-direction: column;
+    gap: 40px;
 }
 
 .FormGroup {
     position: relative;
 }
+
 
 input {
     width: 100%;
@@ -42,76 +43,59 @@ input {
     border: 1px solid #4e4e4e;
     border-radius: 12px;
     font-size: 16px;
-    outline: none;
-    background-color: #fff;
-    box-sizing: border-box;
+    background-color: #ffffff;
     transition: all 0.2s;
+    outline: none;
+    box-sizing: border-box;
 }
 
 input:focus {
-    border-color: #333;
+    border-width: 1px;
+    background-color: #ffffff;
 }
 
 .FormLabel {
     position: absolute;
-    top: 14px;
-    left: 12px;
-    font-size: 14px;
-    color: #888;
+    top: 15px;
+    left: 10px;
+    color: #8f8f8f;
     pointer-events: none;
     transition: all 0.2s;
-    background-color: #fff;
     padding: 0 4px;
 }
 
 input:focus + .FormLabel,
 input:not(:placeholder-shown) + .FormLabel {
     transform: translateY(-22px);
-    font-size: 12px;
-    color: #555;
+    background-color: #ffffff;
+    font-size: 13px;
 }
 
 button {
     width: 100%;
     padding: 12px;
-    font-size: 16px;
+    background-color: var(--color-background);
+    color: rgb(255, 255, 255);
+    border: none;
     border-radius: 12px;
-    border: 1px solid #2d2222;
-    background-color: #2d2222;
-    color: #fff;
     cursor: pointer;
+    font-size: 16px;
     transition: all 0.2s;
+    border: 1px solid #2d2222;
+    
 }
 
-button:hover:enabled {
-    background-color: #fff;
+button:hover {
+    background-color: #ffffff00;
     color: #2d2222;
-}
-
-button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+    border: 1px solid #2d2222;
 }
 
 .Error {
     position: absolute;
-    bottom: -20px;
-    left: 8px;
+    bottom: -20px;   /* đẩy xuống ngay dưới input */
+    left: 5px;
+    color: var(--color-error);
     font-size: 13px;
-    color: red;
-}
-
-.ForgotPassword {
-    width: 100%;
-    text-align: right;
-}
-
-.registerLink {
-    color: #2d2222;
-    font-weight: bold;
-    text-decoration: none;
-}
-
-.registerLink:hover {
-    text-decoration: underline;
+    pointer-events: none; /* không ảnh hưởng khi click */
 }

@@ -3,6 +3,12 @@ const BASE_URL = 'http://localhost:8080/api';
 
 const httpRequest = axios.create({
   baseURL: BASE_URL,
+  headers: { 
+    "context-Type": "application/json",
+    "Accept": "application/json"
+
+  },
+  withCredentials: true
 });
 
 export const get = async (path, options = {}) => {

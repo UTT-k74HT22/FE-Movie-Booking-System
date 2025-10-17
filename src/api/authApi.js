@@ -1,88 +1,92 @@
-import * as httpRequest from '../utils/httpRequest'; 
-/**
- * Auth API – quản lý các request liên quan đến xác thực (login, register, active, v.v.)
- * Mỗi method đều nhận 1 object request body để dễ mở rộng.
- * Trả về data "thật" từ backend hoặc throw error để caller xử lý.
- */
+import * as httpRequest from '../utils/httpRequest';
+import { tokenService } from '../utils/tokenService';
+
 const authApi = {
-    /**
-     * Đăng nhập tài khoản
-     * @param {{ email: string, password: string }} request
-     */
-    login: async (request) => {
-        try {
-          const response = await httpRequest.post(
-            '/auth/login',
-            request, // request = { username, password }
-            { headers: { 'Content-Type': 'application/json' } } // gửi JSON
-          );
-          console.log('[AUTH API] Login success:', response.data);
-          return response.data; // trả về data trực tiếp
-        } catch (error) {
-          console.error('[AUTH API] Login error:', error.response?.data || error.message);
-          // throw lỗi API về component để handle
-          throw error.response?.data || error;
-        }
-      },
+  login: async (username, password) => {
+    try {
 
-    /**
-     * Đăng ký tài khoản
-     * @param {{ username: string, email: string, password: string }} request
-     */
-    register: async (request) => {
-        try {
-            const response = await httpRequest.post('/auth/register', request);
-            console.log('[AUTH API] Register success:', response);
-            return response;
-        } catch (error) {
-            console.error('[AUTH API] Register error:', error);
-            throw error;
-        }
-    },
+      const data = await httpRequest.post('/auth/login', {
+        username,
+        password,
+      });
 
-    /**
-     * Kích hoạt tài khoản (qua email + OTP)
-     * @param {{ email: string, otp: string }} request
-     */
-    active: async (request) => {
-        try {
-            const response = await httpRequest.post('/auth/activate', request);
-            console.log('[AUTH API] Active success:', response);
-            return response;
-        } catch (error) {
-            console.error('[AUTH API] Active error:', error);
-            throw error;
-        }
-    },
+      const { accessToken, refreshToken, expiresIn, user} = data;
+      
+      tokenService.saveTokens({
+        accessToken,
+        refreshToken,
+        expiresIn: expiresIn || 3600
+      });
+      return data
+      
+    } catch (error) {
+      const message = 
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      "Đăng nhập thất bại. Vui lòng thử lại!";
+      throw new Error(message);
+    }
+  },
 
-    /**
-     * Refresh token (chuẩn bị cho JWT flow)
-     * @param {{ refreshToken: string }} request
-     */
-    refreshToken: async (request) => {
-        try {
-            const response = await httpRequest.post('/auth/refresh-token', request);
-            console.log('[AUTH API] Refresh token success:', response);
-            return response;
-        } catch (error) {
-            console.error('[AUTH API] Refresh token error:', error);
-            throw error;
-        }
-    },
+  register: async (username, email, password) => {
+    try {
+      const data = await httpRequest.post('/auth/register', {
+        username,
+        email,
+        password,
+      });
 
-    /**
-     * Logout user (nếu backend hỗ trợ API logout)
-     */
-    logout: async (request) => {
-        try {
-            const response = await httpRequest.post('/auth/logout');
-            console.log('[AUTH API] Logout success:', response);
-            return response;
-        } catch (error) {
-            console.error('[AUTH API] Logout error:', error);
-            throw error;
-        }
-    },
+      const { accessToken, refreshToken, expiresIn, user} = data;
+      
+      tokenService.saveTokens({
+        accessToken,
+        refreshToken,
+        expiresIn: expiresIn || 3600
+      });
+      return {user}
+
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  logout: async () => {
+    try {
+      const refreshToken = tokenService.getRefreshToken();
+
+      await httpRequest.post('/auth/logout', { refreshToken });
+      
+      tokenService.clearTokens();
+    } catch (error) {
+
+      tokenService.clearTokens();
+      throw error;
+    }
+  },
+
+  refreshToken: async () => {
+    try {
+      const refreshToken = tokenService.getRefreshToken();
+
+      if (!refreshToken) {
+        throw new Error('No refresh token availble');
+      }
+
+      const data = await httpRequest.post('/auth/logout', { refreshToken });
+      const {accessToken, refreshToken: newRefreshToken, expiresIn} = data;
+      tokenService.saveTokens({
+        accessToken,
+        refreshToken: newRefreshToken || refreshToken,
+        expiresIn: expiresIn ||3600
+      });
+      return accessToken;
+    } catch (error) {
+
+      tokenService.clearTokens();
+      throw error;
+    }
+  },
+
 };
 
 export default authApi;
