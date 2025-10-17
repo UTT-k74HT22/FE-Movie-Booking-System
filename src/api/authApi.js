@@ -72,7 +72,7 @@ const authApi = {
         throw new Error('No refresh token availble');
       }
 
-      const data = await httpRequest.post('/auth/logout', { refreshToken });
+      const data = await httpRequest.post('/auth/refresh', { refreshToken });
       const {accessToken, refreshToken: newRefreshToken, expiresIn} = data;
       tokenService.saveTokens({
         accessToken,

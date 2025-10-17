@@ -1,121 +1,140 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { TextField, Button, Box, Typography, Paper } from "@mui/material";
-import authApi from "../../../api/authApi";
+import React, { useState } from 'react';
+import styles from './RegisterForm.module.css';
+import authApi from '../../../api/authApi';
+import { Link, useNavigate } from 'react-router-dom';
 
 const RegisterForm = () => {
-  const navigate = useNavigate();
 
-  const [form, setForm] = useState({
-    username: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
+    const [form, setForm] = useState({ 
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+});
+    const [errors, setErrors] = useState({});
+    const [success, setSuccess] = useState('');
+    const [submitting, setSubmitting] = useState(false);
+    const navigate = useNavigate();
+    
 
-  const [loading, setLoading] = useState(false);
+    const handleChange = (e) => {
+        setForm({ ...form, [e.target.name]: e.target.value });
 
-  const validate = (values) => {
-    if (!values.username.trim()) return "Username không được để trống!";
-    if (!values.email.trim()) return "Email không được để trống!";
-    if (!values.password.trim()) return "Password không được để trống!";
-    if (!values.confirmPassword.trim())
-      return "Confirm Password không được để trống!";
-    if (values.confirmPassword !== values.password)
-      return "Password không khớp!";
-    return null;
-  };
+        setErrors({ ...errors, [e.target.name]: ''});
+    };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+        let newErrors = { username: '', email: '', password: '' };
+        let isValid = true;
 
-    const errorMsg = validate(form);
-    if (errorMsg) {
-      toast.warning(errorMsg); 
-      return;
-    }
+        if (!form.username.trim()) {
+            newErrors.username = "Username không được để trống!";
+            isValid = false;
+        }
 
-    setLoading(true);
+        // validate email
+        if (!form.email.trim()) {
+            newErrors.email = "Email không được để trống!";
+            isValid = false;
+        }
 
-    try {
-      await authApi.register({
-        username: form.username,
-        email: form.email,
-        password: form.password,
-      });
+        // validate password
+        if (!form.password.trim()) {
+            newErrors.password = 'Password không được để trống!';
+            isValid = false;
 
-      toast.success("Đăng ký thành công! Vui lòng kiểm tra email để kích hoạt tài khoản.");
-      navigate("/active", { state: { email: form.email } });
-    } catch (error) {
-      console.error("[REGISTER] error:", error);
-      toast.error("Đăng ký thất bại. Vui lòng thử lại.");
-    } finally {
-      setLoading(false);
-    }
-  };
+        } else if (form.confirmPassword !== form.password) {
+                newErrors.confirmPassword = "Password không khớp!";
+                isValid = false;
+        }
 
-  return (
-    <Box sx={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f5f6fa' }}>
-      <Paper elevation={4} sx={{ p: 4, borderRadius: 4, minWidth: 340 }}>
-        <Typography variant="h5" color="success.main" mb={2} fontWeight={700} align="center">Đăng ký</Typography>
-        <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          <TextField
-            label="Tên đăng nhập"
-            name="username"
-            value={form.username}
-            onChange={handleChange}
-            required
-            fullWidth
-            autoFocus
-            disabled={loading}
-          />
-          <TextField
-            label="Email"
-            name="email"
-            type="email"
-            value={form.email}
-            onChange={handleChange}
-            required
-            fullWidth
-            disabled={loading}
-          />
-          <TextField
-            label="Mật khẩu"
-            name="password"
-            type="password"
-            value={form.password}
-            onChange={handleChange}
-            required
-            fullWidth
-            disabled={loading}
-          />
-          <TextField
-            label="Nhập lại mật khẩu"
-            name="confirmPassword"
-            type="password"
-            value={form.confirmPassword}
-            onChange={handleChange}
-            required
-            fullWidth
-            disabled={loading}
-          />
-          <Button type="submit" variant="contained" color="success" disabled={loading} size="large" sx={{ mt: 1, borderRadius: 2 }}>
-            {loading ? "Đang đăng ký..." : "Đăng ký"}
-          </Button>
-          <Typography align="center" mt={2} fontSize={15}>
-            Đã có tài khoản?{' '}
-            <Link to="/login" style={{ color: '#388e3c', fontWeight: 600, textDecoration: 'none' }}>Đăng nhập</Link>
-          </Typography>
-        </Box>
-      </Paper>
-    </Box>
-  );
-};
+        setErrors(newErrors);
 
+        if (!isValid) return;
+            setSubmitting(true);
+            setErrors({});
+            setSuccess('');
+
+            try {
+                const result = await authApi.register(form.username, form.email, form.password);
+                setSuccess(result.message);
+                sessionStorage.setItem('pendingVerificationEmail', form.email);
+
+                setTimeout(() => {
+                  navigate('/active', { state: { email: form.email }});
+                }, 1200);
+            } catch (error) {
+
+                if (error.response?.status === 409) {
+                  setErrors("Email đã được sử dụng!");
+                } else {
+                  setErrors(error.reponse?.data?.message || "Đăng ký thất bại!");
+                }
+            } finally {
+                setSubmitting(false);
+            }
+        
+    };
+    return (
+        // form register
+        <div className={styles.Wrapper}>
+            <form className={styles.RegisterForm} onSubmit={handleSubmit}>
+                <h2>Register</h2>
+
+                <div className={styles.FormContainer}>
+                    <div className={styles.FormGroup}>
+                        <input
+                            type="text"
+                            name='username'
+                            placeholder=" "
+                            value={form.username}
+                            onChange={handleChange}
+                        />
+                        <label htmlFor="username" className={styles.FormLabel}>Username</label>
+                        {errors.username && <p className={styles.Error}>{errors.username}</p>}
+                    </div>
+                    <div className={styles.FormGroup}>
+                        <input
+                            type="email"
+                            name='email'
+                            placeholder=" "
+                            value={form.email}
+                            onChange={handleChange}
+                        />
+                        <label htmlFor="email" className={styles.FormLabel}>Email</label>
+                        {errors.email && <p className={styles.Error}>{errors.email}</p>}
+                    </div>
+                    <div className={styles.FormGroup}>
+                        <input
+                            type="password"
+                            name='password'
+                            placeholder=" "
+                            value={form.password}
+                            onChange={handleChange}
+                        />
+                        <label htmlFor="password" className={styles.FormLabel}>Password</label>
+                        {errors.password && <p className={styles.Error}>{errors.password}</p>}
+                    </div>
+                    <div className={styles.FormGroup}>
+                        <input
+                            type="password"
+                            name='confirmPassword'
+                            placeholder=" "
+                            value={form.confirmPassword}
+                            onChange={handleChange}
+                        />
+                        <label htmlFor="confirmPassword" className={styles.FormLabel}>Confirm Password</label>
+                        {errors.confirmPassword && <p className={styles.Error}>{errors.confirmPassword}</p>}
+                    </div>
+                </div>
+                <button type="submit" disabled={submitting}>{submitting ? 'Đang đăng ký...' : 'Register'}</button>
+                    <p>You already have an account <Link to="/login" className={styles.registerLink}>
+                    Login
+                    </Link></p>
+            </form>
+        </div>
+    );
+}
 export default RegisterForm;

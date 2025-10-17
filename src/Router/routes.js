@@ -1,12 +1,14 @@
 import Home from '../pages/Home/Home';
 import LoginForm from '../components/Auth/LoginForm/LoginForm';
 import RegisterForm from '../components/Auth/RegisterForm/RegisterForm';
+import ActiveForm from '../components/Auth/ActiveForm/ActiveForm';
 import { Dashboard, Setting } from '../pages/admin';
 
 const publicRouter = [
     { path: "/", component: Home, layout: null },
     { path: "/login", component: LoginForm, layout: null },
     { path: "/register", component: RegisterForm, layout: null },
+    {path: "/active", component: ActiveForm, layout: null},
 ];
 
 const privateRouter = [
