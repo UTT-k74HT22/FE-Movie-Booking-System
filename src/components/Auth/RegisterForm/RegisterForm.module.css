@@ -11,7 +11,7 @@
     box-shadow: 5px 5px 10px rgba(0,0,0,0.3); /* tạo bóng đổ nhẹ */    
 }
 
-h2 {
+.h2 {
     font-size: 40px;
     font-weight: bold;
 }
@@ -38,7 +38,7 @@ h2 {
 }
 
 
-input {
+.Input {
     width: 100%;
     padding: 14px;
     border: 1px solid #4e4e4e;
@@ -50,7 +50,7 @@ input {
     box-sizing: border-box;
 }
 
-input:focus {
+.Input:focus {
     border-width: 1px;
     background-color: #ffffff;
 }
@@ -65,14 +65,14 @@ input:focus {
     padding: 0 4px;
 }
 
-input:focus + .FormLabel,
-input:not(:placeholder-shown) + .FormLabel {
+.Input:focus + .FormLabel,
+.Input:not(:placeholder-shown) + .FormLabel {
     transform: translateY(-22px);
     background-color: #ffffff;
     font-size: 13px;
 }
 
-button {
+.Button {
     width: 100%;
     padding: 12px;
     background-color: var(--color-background);
@@ -86,7 +86,7 @@ button {
     
 }
 
-button:hover {
+.Button:hover {
     background-color: #ffffff00;
     color: #2d2222;
     border: 1px solid #2d2222;
@@ -94,7 +94,7 @@ button:hover {
 
 .Error {
     position: absolute;
-    bottom: -20px;   /* đẩy xuống ngay dưới input */
+    bottom: -20px;   /* đẩy xuống ngay dưới .Input */
     left: 5px;
     color: var(--color-error);
     font-size: 13px;

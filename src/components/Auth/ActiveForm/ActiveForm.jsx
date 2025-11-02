@@ -1,68 +1,119 @@
-import React, { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { TextField, Button, Box, Typography, Paper } from "@mui/material";
-import authApi from "../../../api/authApi";
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import authApi from '../../../api/authApi';
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
+import CircularProgress from '@mui/material/CircularProgress';
+import styles from './ActiveForm.module.css';
+import { use } from 'react';
 
-export default function ActiveForm() {
-  const [otp, setOtp] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-
-  const location = useLocation();
+const ActiveForm = () => {
+  const [otp, setOtp] = useState('');
+  const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
+  const email = localStorage.getItem('pendingActivationEmail');
 
-  const email = location.state?.email || "";
+  // useEffect(() => {
+  //   if (!email) {
+  //     toast.error('Không tìm thấy email để kích hoạt. Vui lòng đăng ký lại.');
+  //     navigate('/register');
+  //   }
+  // }, [email, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-    setLoading(true);
+    if (!otp.trim()) {
+      toast.error('Vui lòng nhập mã OTP!');
+      return;
+    }
 
+    setSubmitting(true);
     try {
-      const response = await authApi.active({ email, otp });
-
-      if (response.success) {
-        toast.success("Kích hoạt tài khoản thành công!");
-        navigate("/login");
-      } else {
-        toast.error("Mã OTP không hợp lệ hoặc đã hết hạn!");
-      }
+      await authApi.active(email, otp);
+      toast.success('Kích hoạt tài khoản thành công! Vui lòng đăng nhập.');
+      localStorage.removeItem('pendingActivationEmail');
+      navigate('/login');
     } catch (err) {
-      console.error("[ACTIVE] Error:", err);
-      toast.error("Kích hoạt thất bại, vui lòng thử lại.");
-      setError(err?.response?.data?.message || "Lỗi không xác định");
+      const msg =
+        err?.response?.data?.message ||
+        'OTP không hợp lệ!';
+      toast.error(msg);
     } finally {
-      setLoading(false);
+      setSubmitting(false);
     }
   };
 
-  return (
-    <Box sx={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f5f6fa' }}>
-      <Paper elevation={4} sx={{ p: 4, borderRadius: 4, minWidth: 340 }}>
-        <Typography variant="h5" color="warning.main" mb={2} fontWeight={700} align="center">Kích hoạt tài khoản</Typography>
-        <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+  const handleResend = async () => {
+    try {
+      await authApi.resend(email);
+      toast.success('Mã OTP đã được gửi lại đến email của bạn.');
+    } catch (err) {
+      const msg =
+        err?.response?.data?.message ||
+        'Gửi OTP thất bại. Vui lòng thử lại!';
+      toast.error(msg);
+    }
+  };
+    return (
+   <Box className={styles.activeFormContainer}>
+      <Paper elevation={4} className={styles.formPaper}>
+        <form className={styles.form} onSubmit={handleSubmit} noValidate>
+          <Typography variant="h5" component="h2" className={styles.title}>
+            Kích Hoạt Tài Khoản
+          </Typography>
+
+          <Typography variant="body2" className={styles.emailText}>
+            Email xác thực <strong>{email || '---'}</strong>
+          </Typography>
+
           <TextField
-            label="Mã OTP"
-            name="otp"
+            label="Nhập mã OTP"
+            variant="outlined"
             value={otp}
             onChange={(e) => setOtp(e.target.value)}
-            required
             fullWidth
-            disabled={loading}
+            className={styles.input}
+            inputProps={{ maxLength: 10 }}
+            disabled={submitting}
           />
-          {error && <Typography color="error" fontSize={14}>{error}</Typography>}
-          <Button type="submit" variant="contained" color="warning" disabled={loading} size="large" sx={{ mt: 1, borderRadius: 2 }}>
-            {loading ? "Đang kích hoạt..." : "Xác nhận"}
-          </Button>
-          <Typography align="center" mt={2} fontSize={15}>
-            Mã OTP đã được gửi đến email: <strong>{email}</strong>
-          </Typography>
-          <Box sx={{ textAlign: 'center', mt: 2 }}>
-            <Link to="/register" style={{ color: '#fbc02d', fontWeight: 600, textDecoration: 'none' }}>← Quay lại đăng ký</Link>
-          </Box>
-        </Box>
+
+          <Stack direction="row" spacing={2} className={styles.actions}>
+            <Button
+              type="submit"
+              variant="contained"
+              disabled={submitting}
+              className={styles.submitButton}
+              fullWidth
+            >
+              {submitting ? (
+                <>
+                  <CircularProgress size={18} thickness={5} className={styles.progress} />
+                  <span className={styles.btnText}>Đang xác thực...</span>
+                </>
+              ) : (
+                'Xác thực'
+              )}
+            </Button>
+
+            <Button
+              type="button"
+              variant="outlined"
+              onClick={handleResend}
+              disabled={submitting}
+              className={styles.resendButton}
+            >
+              Gửi lại OTP
+            </Button>
+          </Stack>
+        </form>
       </Paper>
     </Box>
   );
-}
+};
+
+export default ActiveForm;

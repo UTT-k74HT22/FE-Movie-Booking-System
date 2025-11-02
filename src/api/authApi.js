@@ -17,7 +17,7 @@ const authApi = {
         refreshToken,
         expiresIn: expiresIn || 3600
       });
-      return data
+      return data;
       
     } catch (error) {
       const message = 
@@ -35,16 +35,26 @@ const authApi = {
         email,
         password,
       });
+      return data;
 
-      const { accessToken, refreshToken, expiresIn, user} = data;
-      
-      tokenService.saveTokens({
-        accessToken,
-        refreshToken,
-        expiresIn: expiresIn || 3600
-      });
-      return {user}
+    } catch (error) {
+      throw error;
+    }
+  },
 
+  active: async ({ email, otp }) => {
+    try {
+      const data = await httpRequest.post('/auth/activate', { email, otp });
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  resend: async (email) => {
+    try {
+      const data = await httpRequest.post('/otp/resend', { email });
+      return data;
     } catch (error) {
       throw error;
     }

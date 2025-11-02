@@ -15,7 +15,6 @@ const LoginForm = () => {
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
-        // mỗi khi người dùng nhập thì xóa lỗi đi
         setErrors({ ...errors, [e.target.name]: ''});
         setServerError('');
     };
@@ -30,7 +29,6 @@ const LoginForm = () => {
         let newErrors = { username: '', password: '' };
         let isValid = true;
 
-        // validate
         if (!form.username.trim()) {
             newErrors.username = "username không được để trống!";
             isValid = false;
@@ -48,7 +46,6 @@ const LoginForm = () => {
 
                 const result = await authApi.login(form.username, form.password);
                 console.log("login thành công:", result);
-
                 navigate('/home');
             
             } catch (error) {
@@ -64,7 +61,7 @@ const LoginForm = () => {
 
         <div className={styles.Wrapper}>
             <form className={styles.LoginForm} onSubmit={handleSubmit}>
-                <h1>login</h1>
+                <h1 className={styles.h1}>login</h1>
                 
                 {serverError && (
                 <div className='{style.ServerError}' role="alert">
@@ -75,6 +72,7 @@ const LoginForm = () => {
                 <div className={styles.FormContainer}>
                     <div className={styles.FormGroup}>
                         <input
+                        className={styles.FormInput}
                             type="text"
                             name='username'
                             placeholder=" "
@@ -86,6 +84,7 @@ const LoginForm = () => {
                     </div>
                     <div className={styles.FormGroup}>
                         <input
+                        className={styles.FormInput}
                             type="password"
                             name='password'
                             placeholder=" "
@@ -96,11 +95,11 @@ const LoginForm = () => {
                         {errors.password && <p className={styles.Error}>{errors.password}</p>}
                     </div>
                 </div>
-                <button type="submit" disabled={submitting}>{submitting ? 'Đang đăng ký...' : 'Login'}</button>
+                <button className={styles.Button}type="submit" disabled={submitting}>{submitting ? 'Đang đăng ký...' : 'Login'}</button>
                 <div className={styles.ForgotPassword}>
                     <a href="#">Forgot Password?</a>
                 </div>
-                    <p>Don't have an account? <Link to="/Register" className={styles.registerLink}>
+                    <p>Don't have an account? <Link to="/register" className={styles.registerLink}>
                     Register
                     </Link></p>
             </form>

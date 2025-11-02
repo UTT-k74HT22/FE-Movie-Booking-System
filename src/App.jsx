@@ -1,6 +1,8 @@
 import React, { Fragment } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { publicRouter, privateRouter } from "./Router/routes";
+import { ToastContainer } from 'react-toastify'; // ✅ THÊM DÒNG NÀY
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
@@ -42,6 +44,7 @@ function App() {
           })}
         </Routes>
       </div>
+      <ToastContainer position="top-right" autoClose={3000} />
     </Router>
   );
 }
