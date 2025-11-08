@@ -1,5 +1,6 @@
 import * as httpRequest from '../utils/httpRequest';
 import { tokenService } from '../utils/tokenService';
+import { jwtDecode } from 'jwt-decode';
 
 const authApi = {
   login: async (username, password) => {
@@ -9,15 +10,26 @@ const authApi = {
         username,
         password,
       });
-
-      const { accessToken, refreshToken, expiresIn, user} = data;
+      console.log('login data:', data);
+      const body = data.data;
+      const { accessToken, refreshToken, expiresIn } = body;
       
+      let decode = {};
+      let role = null;
+        try {
+          decode = jwtDecode(accessToken);
+          role = decode.roles;
+          localStorage.setItem('userRole', role);
+        } catch (error) {
+          console.error('Invalid token:', error);
+        }
+
       tokenService.saveTokens({
         accessToken,
         refreshToken,
         expiresIn: expiresIn || 3600
       });
-      return data;
+      return { body, role };
       
     } catch (error) {
       const message = 
@@ -35,7 +47,8 @@ const authApi = {
         email,
         password,
       });
-      return data;
+      const body = data.data;
+      return body;
 
     } catch (error) {
       throw error;
@@ -45,7 +58,8 @@ const authApi = {
   active: async ({ email, otp }) => {
     try {
       const data = await httpRequest.post('/auth/activate', { email, otp });
-      return data;
+      const body = data.data;
+      return body;
     } catch (error) {
       throw error;
     }
@@ -54,6 +68,15 @@ const authApi = {
   resend: async (email) => {
     try {
       const data = await httpRequest.post('/otp/resend', { email });
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  forgotPassword: async (email) => {
+    try {
+      const data = await httpRequest.post('/auth/forgot-password', { email });
       return data;
     } catch (error) {
       throw error;
@@ -77,21 +100,19 @@ const authApi = {
   refreshToken: async () => {
     try {
       const refreshToken = tokenService.getRefreshToken();
-
       if (!refreshToken) {
         throw new Error('No refresh token availble');
       }
-
       const data = await httpRequest.post('/auth/refresh-token', { refreshToken });
-      const {accessToken, refreshToken: newRefreshToken, expiresIn} = data;
+      const {accessToken, refreshToken: newRefreshToken, expiresIn} = data.data;
+      console.log('refreshed token:',data.data);
       tokenService.saveTokens({
         accessToken,
         refreshToken: newRefreshToken || refreshToken,
-        expiresIn: expiresIn ||3600
+        expiresIn
       });
       return accessToken;
     } catch (error) {
-
       tokenService.clearTokens();
       throw error;
     }

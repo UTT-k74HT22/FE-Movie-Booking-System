@@ -1,8 +1,9 @@
 import React, { Fragment } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { publicRouter, privateRouter } from "./Router/routes";
-import { ToastContainer } from 'react-toastify'; // ✅ THÊM DÒNG NÀY
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ProtectedRoute from "./Router/ProtectedRoute";
 
 function App() {
   return (
@@ -10,9 +11,7 @@ function App() {
       <div className="app">
         <Routes>
           {publicRouter.map((route, index) => {
-            const Layout = route.layout === null ? Fragment : Fragment;
-            // nếu layout bằng null ko render ra layout
-            // ngược lại render ra defautlayout( laayout tự tạo dùng chung)
+            const Layout = route.layout || Fragment;
             const Page = route.component;
 
             return (
@@ -28,6 +27,7 @@ function App() {
             );
           })}
           {privateRouter.map((route, index) => {
+            const Layout = route.layout || Fragment;
             const Page = route.component;
 
             return (
@@ -35,9 +35,11 @@ function App() {
                 key={`private-${index}`}
                 path={route.path}
                 element={
-                  <Fragment>
+                  <ProtectedRoute allowedRoles={route.role}>
+                  <Layout>
                     <Page />
-                  </Fragment>
+                  </Layout>
+                  </ProtectedRoute>
                 }
               />
             );

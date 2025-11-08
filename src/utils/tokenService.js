@@ -1,3 +1,6 @@
+import { jwtDecode } from "jwt-decode";
+import dayjs from "dayjs";
+
 const ACCESS_KEY = 'access_token';
 const REFRESH_KEY = 'refresh_token';
 const TOKEN_EXPIRY_KEY = 'token_expiry';
@@ -5,7 +8,7 @@ const TOKEN_EXPIRY_KEY = 'token_expiry';
 export const tokenService = {
     // lưu token
     setAccessToken(accessToken) {
-        if (!accessToken === null || accessToken === undefined ) return;
+        if (accessToken === null ) return;
         localStorage.setItem(ACCESS_KEY, accessToken);
     },
 
@@ -16,7 +19,7 @@ export const tokenService = {
 
     //lưu refresh token
     setRefreshToken(refreshToken) {
-        if (!refreshToken === null || refreshToken === undefined ) return;
+        if (!refreshToken ) return;
         localStorage.setItem(REFRESH_KEY, refreshToken)
     },
 
@@ -31,12 +34,12 @@ export const tokenService = {
     },
 
     //kiểm tra token đã hết hạn chưa
-    isTokenExpired() {
-        const expiry = localStorage.getItem(TOKEN_EXPIRY_KEY);
-        if (!expiry) return true;
+    isTokenExpired(seconds = 300) {
+        const token = this.getAccessToken();
+        if (!token) return true;
 
-        //kiểm tra trước 5 phút đẻ kịp refresh
-        return Date.now() >= (parseInt(expiry) - 5 * 60 * 1000);
+        const decode = jwtDecode(token);
+        return dayjs.unix(decode.exp).diff(dayjs()) < seconds * 1000;
     },
 
     //xóa tất cả token sau khi logout
@@ -48,11 +51,20 @@ export const tokenService = {
 
     //lưu tất cả toke sau khi login
     saveTokens( { accessToken, refreshToken, expiresIn}) {
+        console.log("saving token with expiresIn", expiresIn);
         this.setAccessToken(accessToken),
         this.setRefreshToken(refreshToken);
 
         //expiesIn = số giây, chuyển sang milliseconds
-        const expiryTime = Date.now() + (expiresIn * 1000);
-        this.setTokenExpiry(expiryTime);
+        try {
+            const decode = jwtDecode(accessToken);
+            const expiryTime = dayjs.unix(decode.exp).valueOf();
+            this.setTokenExpiry(expiryTime);
+        } catch (error) {
+            console.error('Lỗi khi giải mã token để lấy thời gian hết hạn:', error);
+            const expiryTime = dayjs().add(expiresIn, 'second').valueOf();
+            this.setTokenExpiry(expiryTime);
+            
+        }
     }
 };

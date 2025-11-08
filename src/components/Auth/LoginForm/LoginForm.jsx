@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './LoginForm.module.css';
 import authApi from '../../../api/authApi';
 import { Link } from 'react-router-dom';
-
+import { jwtDecode } from 'jwt-decode';
+import { tokenService } from '../../../utils/tokenService';
 
 const LoginForm = () => {
     const [form, setForm] = useState({ username: '', password: '' });
@@ -12,6 +13,20 @@ const LoginForm = () => {
     const [submitting, setSubmitting] = useState(false);
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = tokenService.getAccessToken();
+        if (token) {
+            try {
+                const decoded = jwtDecode(token);
+                const role = decoded.roles;
+                if (role === "ROLE_ADMIN") navigate("/dashboard", { replace: true });
+                else if (role === "ROLE_USER") navigate("/", { replace: true });
+            } catch (error) {
+                tokenService.clearToken(); // xóa token nếu decode lỗi
+            }
+        }
+    }, [navigate]);
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -44,9 +59,14 @@ const LoginForm = () => {
         setSubmitting(true);
             try {
 
-                const result = await authApi.login(form.username, form.password);
-                console.log("login thành công:", result);
-                navigate('/home');
+                const res = await authApi.login(form.username, form.password);
+                console.log('login resp:', res);
+                let role = res?.role ?? res?.roles;
+                if(role === 'ROLE_ADMIN'){
+                    navigate('/dashboard');
+                } else {
+                    navigate('/');
+                }
             
             } catch (error) {
                 const msg = 
@@ -97,7 +117,7 @@ const LoginForm = () => {
                 </div>
                 <button className={styles.Button}type="submit" disabled={submitting}>{submitting ? 'Đang đăng ký...' : 'Login'}</button>
                 <div className={styles.ForgotPassword}>
-                    <a href="#">Forgot Password?</a>
+                    <a href="/forgot-password">Forgot Password?</a>
                 </div>
                     <p>Don't have an account? <Link to="/register" className={styles.registerLink}>
                     Register
