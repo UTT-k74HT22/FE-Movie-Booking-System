@@ -1,0 +1,87 @@
+/* Container toàn trang (flex center) */
+.activeFormContainer {
+  min-height: 60vh; /* thay đổi tuỳ layout */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: linear-gradient(180deg,#f7fbff 0%, #ffffff 100%);
+}
+
+/* Paper chứa form */
+.formPaper {
+  width: 420px;
+  max-width: 95%;
+  padding: 28px;
+  border-radius: 12px;
+  box-sizing: border-box;
+}
+
+/* form element */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Title */
+.title {
+  margin: 0 0 4px 0;
+  text-align: center;
+  font-weight: 600;
+}
+
+/* Email line */
+.emailText {
+  text-align: center;
+  color: #444;
+  font-size: 0.95rem;
+}
+
+/* Input (TextField wrapper) */
+
+
+/* Action buttons group */
+.actions {
+  margin-top: 6px;
+  align-items: center;
+}
+
+/* Primary submit button */
+.submitButton {
+  background-color: #1976d2;
+  color: white;
+  font-weight: 600;
+  text-transform: none;
+}
+
+.submitButton:hover {
+  background-color: #155fa0;
+}
+
+/* Small spinner margin */
+.progress {
+  margin-right: 8px;
+  color: white;
+}
+
+/* Submit text (để căn inline với spinner) */
+.btnText {
+  vertical-align: middle;
+}
+
+/* Resend button */
+.resendButton {
+  text-transform: none;
+  border-color: #c4c4c4;
+}
+
+/* Responsive: thu nhỏ card trên mobile */
+@media (max-width: 480px) {
+  .formPaper {
+    padding: 18px;
+  }
+  .title {
+    font-size: 1.1rem;
+  }
+}

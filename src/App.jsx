@@ -1,15 +1,55 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import LoginForm from "./components/Auth/LoginForm";
-import RegisterForm from "./components/Auth/RegisterForm/RegisterForm";
+import { publicRouter, privateRouter } from "./Router/routes";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import ProtectedRoute from "./Router/ProtectedRoute";
 
-export default function App() {
+
+function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<LoginForm />} />
-        <Route path="/Register" element={<RegisterForm />} />
-      </Routes>
+      <div className="app">
+        <Routes>
+          {publicRouter.map((route, index) => {
+            const Layout = route.layout || Fragment;
+            const Page = route.component;
+
+            return (
+              <Route
+                key={index}
+                path={route.path}
+                element={
+                  <Layout>
+                    <Page />
+                  </Layout>
+                }
+              />
+            );
+          })}
+          {privateRouter.map((route, index) => {
+            const Layout = route.layout || Fragment;
+            const Page = route.component;
+
+            return (
+              <Route
+                key={`private-${index}`}
+                path={route.path}
+                element={
+                  <ProtectedRoute allowedRoles={route.role}>
+                  <Layout>
+                    <Page />
+                  </Layout>
+                  </ProtectedRoute>
+                }
+              />
+            );
+          })}
+        </Routes>
+      </div>
+      <ToastContainer position="top-right" autoClose={3000} />
     </Router>
   );
 }
+
+export default App;
