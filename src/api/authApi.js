@@ -40,15 +40,25 @@ const authApi = {
     }
   },
 
-  register: async (username, email, password) => {
+  register: async (
+    firstName,
+    lastName,
+    username,
+    email,
+    phoneNumber,
+    password,
+    ) => {
     try {
       const data = await httpRequest.post('/auth/register', {
+        firstName,
+        lastName,
         username,
         email,
-        password,
+        phoneNumber,
+        password
       });
-      const body = data.data;
-      return body;
+      console.log('register data:', data);
+      return data.data;
 
     } catch (error) {
       throw error;

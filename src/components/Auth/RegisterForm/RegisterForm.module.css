@@ -1,102 +1,113 @@
+/* RegisterForm.module.css */
+
+.Wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f5f6fa;
+  padding: 20px;
+}
+
 .RegisterForm {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 50px;
-    padding: 20px;
-    border-radius: 10px;
-    width: 300px;
-    box-shadow: 5px 5px 10px rgba(0,0,0,0.3); /* tạo bóng đổ nhẹ */    
+  background-color: #ffffff;
+  padding: 32px 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 420px;
+  box-sizing: border-box;
 }
 
 .h2 {
-    font-size: 40px;
-    font-weight: bold;
-}
-
-/* Wrapper to center the login form in the viewport */
-.Wrapper {
-    min-height: 100vh; /* full viewport height */
-    display: flex;
-    align-items: center; /* vertical center */
-    justify-content: center; /* horizontal center */
-    padding: 20px; /* small spacing on narrow screens */
-    box-sizing: border-box;
+  text-align: center;
+  margin-bottom: 24px;
+  font-size: 24px;
+  font-weight: 600;
+  color: #111827;
 }
 
 .FormContainer {
-    display: flex;
-    width: 100%;
-    flex-direction: column;
-    gap: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .FormGroup {
-    position: relative;
+  position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
-
 .Input {
-    width: 100%;
-    padding: 14px;
-    border: 1px solid #4e4e4e;
-    border-radius: 12px;
-    font-size: 16px;
-    background-color: #ffffff;
-    transition: all 0.2s;
-    outline: none;
-    box-sizing: border-box;
+  padding: 14px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
 }
 
 .Input:focus {
-    border-width: 1px;
-    background-color: #ffffff;
+  border-color: #3b82f6;
 }
 
 .FormLabel {
-    position: absolute;
-    top: 15px;
-    left: 10px;
-    color: #8f8f8f;
-    pointer-events: none;
-    transition: all 0.2s;
-    padding: 0 4px;
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  background-color: #ffffff;
+  padding: 0 4px;
+  font-size: 14px;
+  color: #6b7280;
+  pointer-events: none;
+  transition: all 0.2s;
 }
 
-.Input:focus + .FormLabel,
-.Input:not(:placeholder-shown) + .FormLabel {
-    transform: translateY(-22px);
-    background-color: #ffffff;
-    font-size: 13px;
+
+.Error {
+  color: #ef4444;
+  font-size: 12px;
+  margin-top: 4px;
 }
 
 .Button {
-    width: 100%;
-    padding: 12px;
-    background-color: var(--color-background);
-    color: rgb(255, 255, 255);
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: all 0.2s;
-    border: 1px solid #2d2222;
-    
+  width: 100%;
+  padding: 14px;
+  margin-top: 20px;
+  border: none;
+  border-radius: 8px;
+  background-color: #3b82f6;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
 }
 
-.Button:hover {
-    background-color: #ffffff00;
-    color: #2d2222;
-    border: 1px solid #2d2222;
+.Button:disabled {
+  background-color: #93c5fd;
+  cursor: not-allowed;
 }
 
-.Error {
-    position: absolute;
-    bottom: -20px;   /* đẩy xuống ngay dưới .Input */
-    left: 5px;
-    color: var(--color-error);
-    font-size: 13px;
-    pointer-events: none; /* không ảnh hưởng khi click */
+.Button:hover:not(:disabled) {
+  background-color: #2563eb;
+}
+
+.registerLink {
+  color: #3b82f6;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.registerLink:hover {
+  text-decoration: underline;
+}
+
+p {
+  text-align: center;
+  font-size: 14px;
+  margin-top: 16px;
+  color: #4b5563;
 }

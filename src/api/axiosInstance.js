@@ -1,11 +1,11 @@
 import axios from "axios";
 import authApi from "../api/authApi";
-import { tokenService } from "./tokenService";
+import { tokenService } from '../utils/tokenService';
 
 const BASE_URL = 'http://localhost:8080/api';
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
-  headers: { Authorization: `Bearer ${TokenService.getAccessToken()}` },
+  headers: { Authorization: `Bearer ${tokenService.getAccessToken()}` },
 });
 
 axiosInstance.interceptors.request.use(async (config) => {

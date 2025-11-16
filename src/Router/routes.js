@@ -5,6 +5,7 @@ import ActiveForm from '../components/Auth/ActiveForm/ActiveForm';
 import ForgotPassword from '../components/Auth/ForgotPassword/ForgotPassword';
 import { Dashboard, Setting } from '../pages/admin';
 import AdminLayout from '../layouts/AdminLayout';
+import AddMovies from '../pages/admin/movies/addMovies/addMovies';
 
 const routes = [
     { path: "/", component: Home, layout: null },
@@ -17,6 +18,7 @@ const routes = [
     // { path: "/profile", component: Profile, layout: null, role: ['admin','user'] },
     { path: "/setting", component: Setting, layout: AdminLayout, role: ['ROLE_ADMIN'] },
     { path: "/dashboard", component: Dashboard, layout: AdminLayout, role: ['ROLE_ADMIN']},
+    {path: "/addMovies", component: AddMovies, layout:AdminLayout, role: ['ROLE_ADMIN'] },
 ];
 
 const publicRouter = routes.filter(route => !route.role);

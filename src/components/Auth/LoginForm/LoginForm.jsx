@@ -115,7 +115,7 @@ const LoginForm = () => {
                         {errors.password && <p className={styles.Error}>{errors.password}</p>}
                     </div>
                 </div>
-                <button className={styles.Button}type="submit" disabled={submitting}>{submitting ? 'Đang đăng ký...' : 'Login'}</button>
+                <button className={styles.Button}type="submit" disabled={submitting}>{submitting ? 'Đang đăng nhập...' : 'Login'}</button>
                 <div className={styles.ForgotPassword}>
                     <a href="/forgot-password">Forgot Password?</a>
                 </div>
