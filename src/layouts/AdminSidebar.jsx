@@ -1,44 +1,42 @@
 import React, { useState, useRef, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 
-function Collapsible({ isOpen, children, duration = 450, easing = "cubic-bezier(.2,.8,.2,1)" }) {
+function Collapsible({
+  isOpen,
+  children,
+  duration = 450,
+  easing = "cubic-bezier(.2,.8,.2,1)",
+}) {
   const containerRef = useRef(null);
   const [maxH, setMaxH] = useState("0px");
   const [isAnimating, setIsAnimating] = useState(false);
 
-  const transition = `max-height ${duration}ms ${easing}, opacity ${Math.round(duration / 2)}ms ${easing}`;
+  const transition = `max-height ${duration}ms ${easing}, opacity ${Math.round(
+    duration / 2
+  )}ms ${easing}`;
 
-  // handle open/close
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
 
     const doOpen = () => {
-      // đo chiều cao thực tế
       const h = el.scrollHeight;
-      // đặt max-height => browser sẽ animate 0 -> h
       setIsAnimating(true);
       setMaxH(`${h}px`);
     };
 
     const doClose = () => {
-      // If previously "none" (unconstrained), set to measured px first so we have a start value.
       const current = maxH;
       const measured = el.scrollHeight;
-      // ensure there's a starting numeric px value before collapsing
       if (current === "none" || current === "0px") {
-        // set to measured px then in next frame collapse to 0
         setMaxH(`${measured}px`);
-        // next frame: set to 0 to trigger transition
         requestAnimationFrame(() => {
-          // second rAF to ensure style applied
           requestAnimationFrame(() => {
             setIsAnimating(true);
             setMaxH("0px");
           });
         });
       } else {
-        // normal: we already have a px start, go to 0
         setIsAnimating(true);
         setMaxH("0px");
       }
@@ -46,10 +44,7 @@ function Collapsible({ isOpen, children, duration = 450, easing = "cubic-bezier(
 
     if (isOpen) doOpen();
     else doClose();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
-
-  // after transition end: if opened, remove max-height constraint (allow grow).
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -58,7 +53,6 @@ function Collapsible({ isOpen, children, duration = 450, easing = "cubic-bezier(
       if (e.propertyName !== "max-height") return;
       // finished opening?
       if (isOpen) {
-        // remove constraint so content can grow naturally
         setMaxH("none");
       }
       setIsAnimating(false);
@@ -90,15 +84,16 @@ export default function AdminSidebar() {
     setIsOpen((prev) => (prev === key ? null : key));
   };
 
-  // duration must match Collapsible default for perfect sync
-  const chevronDuration = 450; // ms
+  const chevronDuration = 450;
   const chevronEasing = "cubic-bezier(.2,.8,.2,1)";
 
   const arrowClass = (open) =>
-    `ml-auto transform transition-transform ${open ? "rotate-180" : "rotate-0"}`;
+    `ml-auto transform transition-transform ${
+      open ? "rotate-180" : "rotate-0"
+    }`;
 
   return (
-        <aside className="fixed top-0 left-0 h-screen w-[290px] bg-white border-r border-[#e0e0e0] px-5 box-border flex flex-col">
+    <aside className="fixed top-0 left-0 h-screen w-[290px] bg-white border-r border-[#e0e0e0] px-5 box-border flex flex-col">
       <div className="flex items-center justify-center py-8">
         <NavLink to="/dashboard" className="text-2xl font-medium">
           ADMIN PANEL
@@ -117,7 +112,9 @@ export default function AdminSidebar() {
                 <span className="text-gray-500">
                   <i className="fi fi-rr-chart-simple text-base" />
                 </span>
-                <span className="text-gray-700 text-sm font-medium">Dashboard</span>
+                <span className="text-gray-700 text-sm font-medium">
+                  Dashboard
+                </span>
               </NavLink>
             </li>
 
@@ -132,7 +129,9 @@ export default function AdminSidebar() {
                 <span className="text-gray-500">
                   <i className="fi fi-rr-camera-movie text-base" />
                 </span>
-                <span className="text-gray-700 text-sm font-medium">Movies</span>
+                <span className="text-gray-700 text-sm font-medium">
+                  Movies
+                </span>
 
                 {/* svg chevron - style inline to sync duration/easing */}
                 <svg
@@ -148,17 +147,38 @@ export default function AdminSidebar() {
                     transition: `transform ${chevronDuration}ms ${chevronEasing}`,
                   }}
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                  />
                 </svg>
               </button>
 
-              <Collapsible isOpen={isOpen === "movies"} duration={chevronDuration} easing={chevronEasing}>
-                <ul id="movies-collapse" className="py-2.5 mt-2 space-y-1 ml-3 text-gray-700 text-sm font-medium">
+              <Collapsible
+                isOpen={isOpen === "movies"}
+                duration={chevronDuration}
+                easing={chevronEasing}
+              >
+                <ul
+                  id="movies-collapse"
+                  className="py-2.5 mt-2 space-y-1 ml-3 text-gray-700 text-sm font-medium"
+                >
                   <li>
-                    <a className="block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-gray-100 curcor-pointer" href="/addMovies">List Movies</a>
+                    <NavLink
+                      className="block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-gray-100 curcor-pointer"
+                      to="/listMovies"
+                    >
+                      List Movies
+                    </NavLink>
                   </li>
                   <li>
-                    <NavLink className="block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-gray-100 curcor-pointer" to="/addMovies">Add Movies</NavLink>
+                    <NavLink
+                      className="block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-gray-100 curcor-pointer"
+                      to="/addMovies"
+                    >
+                      Add Movies
+                    </NavLink>
                   </li>
                 </ul>
               </Collapsible>
@@ -175,7 +195,9 @@ export default function AdminSidebar() {
                 <span className="text-gray-500">
                   <i className="fi fi-rr-video-camera text-base" />
                 </span>
-                <span className="text-gray-700 text-sm font-medium">Cinemas</span>
+                <span className="text-gray-700 text-sm font-medium">
+                  Cinemas
+                </span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -189,20 +211,37 @@ export default function AdminSidebar() {
                     transition: `transform ${chevronDuration}ms ${chevronEasing}`,
                   }}
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                  />
                 </svg>
               </button>
 
-              <Collapsible isOpen={isOpen === "cinemas"} duration={chevronDuration} easing={chevronEasing}>
-                <ul id="cinemas-collapse" className="py-2.5 mt-2 space-y-1 ml-3 text-gray-700 text-sm font-medium">
+              <Collapsible
+                isOpen={isOpen === "cinemas"}
+                duration={chevronDuration}
+                easing={chevronEasing}
+              >
+                <ul
+                  id="cinemas-collapse"
+                  className="py-2.5 mt-2 space-y-1 ml-3 text-gray-700 text-sm font-medium"
+                >
                   <li>
-                    <a className="block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-gray-100">Cinemas List</a>
+                    <a className="block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-gray-100">
+                      Cinemas List
+                    </a>
                   </li>
                   <li>
-                    <a className="block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-gray-100">Screening Rooms</a>
+                    <a className="block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-gray-100">
+                      Screening Rooms
+                    </a>
                   </li>
                   <li>
-                    <a className="block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-gray-100">Showtimes</a>
+                    <a className="block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-gray-100">
+                      Showtimes
+                    </a>
                   </li>
                 </ul>
               </Collapsible>
@@ -219,7 +258,9 @@ export default function AdminSidebar() {
                 <span className="text-gray-500">
                   <i className="fi fi-rr-calendar-clock text-base" />
                 </span>
-                <span className="text-gray-700 text-sm font-medium">Booking</span>
+                <span className="text-gray-700 text-sm font-medium">
+                  Booking
+                </span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -233,17 +274,32 @@ export default function AdminSidebar() {
                     transition: `transform ${chevronDuration}ms ${chevronEasing}`,
                   }}
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                  />
                 </svg>
               </button>
 
-              <Collapsible isOpen={isOpen === "booking"} duration={chevronDuration} easing={chevronEasing}>
-                <ul id="booking-collapse" className="py-2.5 mt-2 space-y-1 ml-3 text-gray-700 text-sm font-medium">
+              <Collapsible
+                isOpen={isOpen === "booking"}
+                duration={chevronDuration}
+                easing={chevronEasing}
+              >
+                <ul
+                  id="booking-collapse"
+                  className="py-2.5 mt-2 space-y-1 ml-3 text-gray-700 text-sm font-medium"
+                >
                   <li>
-                    <a className="block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-gray-100">Booking List</a>
+                    <a className="block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-gray-100">
+                      Booking List
+                    </a>
                   </li>
                   <li>
-                    <a className="block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-gray-100">Booking Statistics</a>
+                    <a className="block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-gray-100">
+                      Booking Statistics
+                    </a>
                   </li>
                 </ul>
               </Collapsible>

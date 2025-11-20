@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { Navigate, useNavigate } from "react-router-dom";
-import { addMovies } from "../../../../services/movieService";
+import { useNavigate } from "react-router-dom";
+import { addMovies } from "../../../services/movieService";
 
 const isValidUrl = (url) => {
   try {
@@ -27,14 +27,16 @@ const AddMovies = () => {
   });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const statusOption = [
-    "COMING SOON"
-  ];
-  const languageOption  = [
-    "Vietnamese", "English"
-  ];
+  const statusOption = ["COMING_SOON"];
+  const languageOption = ["Vietnamese", "English"];
   const genreOption = [
-    "Action", "Comedy", "Drama", "Horror", "Sci-Fi", "Romance", "Thriller"
+    "Action",
+    "Comedy",
+    "Drama",
+    "Horror",
+    "Sci-Fi",
+    "Romance",
+    "Thriller",
   ];
 
   const validateForm = () => {
@@ -91,7 +93,7 @@ const AddMovies = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm(prev => ({ ...prev, [name]: value }));
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -108,15 +110,16 @@ const AddMovies = () => {
     const payload = {
       title: form.title.trim(),
       description: form.description.trim(),
-      duration: form.duration.trim(),
+      duration: Number(form.duration),
       releaseDate: form.releaseDate.trim(),
       posterUrl: form.posterUrl.trim(),
       trailerUrl: form.trailerUrl.trim(),
-      rating: form.rating.trim(),
+      rating: Number(form.rating),
       genre: form.genre.trim(),
       language: form.language.trim(),
       status: form.status,
     };
+    console.log("Payload FE gửi:", payload);
 
     setLoading(true);
     try {
@@ -137,7 +140,6 @@ const AddMovies = () => {
       });
 
       setTimeout(() => navigate("/listMovies"), 1000);
-
     } catch (err) {
       if (err?.data?.errors) {
         const validate = err.data.errors;
@@ -155,7 +157,7 @@ const AddMovies = () => {
   };
 
   const handleRemove = () => {
-    if(window.confirm("bạn chắc chắn muốn xóa toàn bộ nội dung đã nhập")) {
+    if (window.confirm("bạn chắc chắn muốn xóa toàn bộ nội dung đã nhập")) {
       setForm({
         title: "",
         description: "",
@@ -166,7 +168,7 @@ const AddMovies = () => {
         rating: "",
         genre: "",
         language: "",
-        status: "COMING_SOON",
+        status: "",
       });
       setErrors({});
       toast.success("dã xóa toàn bộ nội dung");
@@ -196,71 +198,114 @@ const AddMovies = () => {
             <div className="p-6">
               <div className="grid gap-5 grid-cols-2">
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-gray-700">Title</label>
+                  <label className="mb-1.5 block text-sm font-medium text-gray-700">
+                    Title
+                  </label>
                   <div>
                     <input
                       name="title"
                       value={form.title}
                       onChange={handleChange}
-                      placeholder="Enter title" 
-                      className="h-11 w-full rounded-lg border border-gray-300 appearance-none px-4 py-2.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-3 focus:ring-blue-500/20 focus:border-blue-300 bg-transparent text-gray-800" type="text"></input>
+                      placeholder="Enter title"
+                      className="h-11 w-full rounded-lg border border-gray-300 appearance-none px-4 py-2.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-3 focus:ring-blue-500/20 focus:border-blue-300 bg-transparent text-gray-800"
+                      type="text"
+                    ></input>
                   </div>
                 </div>
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-gray-700">Genre</label>
+                  <label className="mb-1.5 block text-sm font-medium text-gray-700">
+                    Genre
+                  </label>
                   <div>
                     <select
                       name="genre"
                       value={form.genre}
-                      onChange={handleChange} 
-                      className="h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 pr-11 text-sm placeholder:text-gray-400 focus:border-blue-300 focus:outline-hidden focus:ring-3 focus:ring-blue-500/10">
-                      <option value ="" className="text-gray-700">Select a Genre</option>
-                      { genreOption.map(genre => (
-                        <option className="text-gray-700" key={genre}  value = {genre}> {genre} </option>
+                      onChange={handleChange}
+                      className="h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 pr-11 text-sm text-gray-700 focus:border-blue-300 focus:outline-hidden focus:ring-3 focus:ring-blue-500/10"
+                    >
+                      <option value="" className="text-gray-700">
+                        Select a Genre
+                      </option>
+                      {genreOption.map((genre) => (
+                        <option
+                          className="text-gray-700"
+                          key={genre}
+                          value={genre}
+                        >
+                          {" "}
+                          {genre}{" "}
+                        </option>
                       ))}
                     </select>
                   </div>
                 </div>
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-gray-700">Language</label>
+                  <label className="mb-1.5 block text-sm font-medium text-gray-700">
+                    Language
+                  </label>
                   <div>
                     <select
                       name="language"
                       value={form.language}
                       onChange={handleChange}
-                      className="h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 pr-11 text-sm placeholder:text-gray-400 focus:border-blue-300 focus:outline-hidden focus:ring-3 focus:ring-blue-500/10">
-                      <option value ="" className="text-gray-700">Select a Language</option>
-                      { languageOption.map(language => (
-                        <option className="text-gray-700" key={language}  value = {language}> {language} </option>
+                      className="h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 pr-11 text-sm text-gray-700 focus:border-blue-300 focus:outline-hidden focus:ring-3 focus:ring-blue-500/10"
+                    >
+                      <option value="" className="text-gray-700">
+                        Select a Language
+                      </option>
+                      {languageOption.map((language) => (
+                        <option
+                          className="text-gray-700"
+                          key={language}
+                          value={language}
+                        >
+                          {" "}
+                          {language}{" "}
+                        </option>
                       ))}
                     </select>
                   </div>
                 </div>
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-gray-700">Status</label>
+                  <label className="mb-1.5 block text-sm font-medium text-gray-700">
+                    Status
+                  </label>
                   <div>
                     <select
-                    name="status"
+                      name="status"
                       value={form.status}
                       onChange={handleChange}
-                      className="h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 pr-11 text-sm placeholder:text-gray-400 focus:border-blue-300 focus:outline-hidden focus:ring-3 focus:ring-blue-500/10">
-                      <option value ="" className="text-gray-700">Select a Status</option>
-                      { statusOption.map(status => (
-                        <option className="text-gray-700" key={status}  value = {status}> {status} </option>
+                      className="h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 pr-11 text-sm text-gray-700 focus:border-blue-300 focus:outline-hidden focus:ring-3 focus:ring-blue-500/10"
+                    >
+                      <option value="" className="text-gray-700">
+                        Select a Status
+                      </option>
+                      {statusOption.map((status) => (
+                        <option
+                          className="text-gray-700"
+                          key={status}
+                          value={status}
+                        >
+                          {" "}
+                          {status}{" "}
+                        </option>
                       ))}
                     </select>
                   </div>
                 </div>
                 <div className="col-span-full">
-                  <label className="mb-1.5 block text-sm font-medium text-gray-700">Description</label>
+                  <label className="mb-1.5 block text-sm font-medium text-gray-700">
+                    Description
+                  </label>
                   <div>
                     <textarea
                       name="description"
                       value={form.description}
                       onChange={handleChange}
                       placeholder="Enter information"
-                      rows= "6"
-                      class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 bg-transparent focus:outline-none focus:border-blue-300 focus:ring-3 focus:ring-blue-500/10"></textarea>
+                      rows="6"
+                      className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 bg-transparent focus:outline-none focus:border-blue-300 focus:ring-3 focus:ring-blue-500/10"
+                    ></textarea>
                   </div>
                 </div>
               </div>
@@ -276,7 +321,9 @@ const AddMovies = () => {
             <div className="p-6">
               <div className="grid gap-5">
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-gray-700">PosterUrl</label>
+                  <label className="mb-1.5 block text-sm font-medium text-gray-700">
+                    PosterUrl
+                  </label>
                   <div>
                     <input
                       name="posterUrl"
@@ -284,11 +331,14 @@ const AddMovies = () => {
                       onChange={handleChange}
                       placeholder="Enter Url"
                       className="h-11 w-full rounded-lg border border-gray-300 appearance-none px-4 py-2.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-3 focus:ring-blue-500/20 focus:border-blue-300 bg-transparent text-gray-800"
-                      type="url"></input>
+                      type="url"
+                    ></input>
                   </div>
                 </div>
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-gray-700">TrailerUrl</label>
+                  <label className="mb-1.5 block text-sm font-medium text-gray-700">
+                    TrailerUrl
+                  </label>
                   <div>
                     <input
                       name="trailerUrl"
@@ -296,7 +346,8 @@ const AddMovies = () => {
                       onChange={handleChange}
                       placeholder="Enter Url"
                       className="h-11 w-full rounded-lg border border-gray-300 appearance-none px-4 py-2.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-3 focus:ring-blue-500/20 focus:border-blue-300 bg-transparent text-gray-800"
-                      type="url"></input>
+                      type="url"
+                    ></input>
                   </div>
                 </div>
               </div>
@@ -308,12 +359,16 @@ const AddMovies = () => {
             rating */}
           <div className="rounded-2xl border border-gray-200 bg-white">
             <div className="border-b border-gray-200 px-6 py-4">
-              <h2 className="text-lg font-medium text-gray-800">Movie Details</h2>
+              <h2 className="text-lg font-medium text-gray-800">
+                Movie Details
+              </h2>
             </div>
             <div className="p-6">
               <div className="grid gap-5">
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-gray-700">Duration</label>
+                  <label className="mb-1.5 block text-sm font-medium text-gray-700">
+                    Duration
+                  </label>
                   <div>
                     <input
                       name="duration"
@@ -321,30 +376,39 @@ const AddMovies = () => {
                       onChange={handleChange}
                       placeholder="Enter Duration (minutes)"
                       className="h-11 w-full rounded-lg border border-gray-300 appearance-none px-4 py-2.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-3 focus:ring-blue-500/20 focus:border-blue-300 bg-transparent text-gray-800"
-                      type="number"></input>
+                      type="number"
+                    ></input>
                   </div>
                 </div>
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-gray-700">Release Date</label>
+                  <label className="mb-1.5 block text-sm font-medium text-gray-700">
+                    Release Date
+                  </label>
                   <div>
                     <input
                       name="releaseDate"
                       value={form.releaseDate}
                       onChange={handleChange}
                       placeholder="Select Release Date"
-                      className="h-11 w-full rounded-lg border border-gray-300 appearance-none px-4 py-2.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-3 focus:ring-blue-500/20 focus:border-blue-300 bg-transparent text-gray-800" 
-                      type="date"></input>
+                      className="h-11 w-full rounded-lg border border-gray-300 appearance-none px-4 py-2.5 text-sm text-gray-400 focus:outline-none focus:ring-3 focus:ring-blue-500/20 focus:border-blue-300 bg-transparent text-gray-800"
+                      type="date"
+                    ></input>
                   </div>
                 </div>
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-gray-700">Rating</label>
+                  <label className="mb-1.5 block text-sm font-medium text-gray-700">
+                    Rating
+                  </label>
                   <div>
                     <input
                       name="rating"
                       value={form.rating}
                       onChange={handleChange}
                       placeholder="Rating"
-                      className="h-11 w-full rounded-lg border border-gray-300 appearance-none px-4 py-2.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-3 focus:ring-blue-500/20 focus:border-blue-300 bg-transparent text-gray-800" type="number" step="0.1"></input>
+                      className="h-11 w-full rounded-lg border border-gray-300 appearance-none px-4 py-2.5 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-3 focus:ring-blue-500/20 focus:border-blue-300 bg-transparent text-gray-800"
+                      type="number"
+                      step="0.1"
+                    ></input>
                   </div>
                 </div>
               </div>
@@ -353,14 +417,20 @@ const AddMovies = () => {
           {/* button */}
           <div className="flex flex-row justify-end gap-3 ">
             <button
-            type="button"
-            onClick={handleRemove}
-            disabled={loading}
-            className="cursor-pointer inline-flex items-center justify-center gap-2 rounded-lg transition px-5 py-3.5 text-sm bg-white text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50">remove</button>
-            <button 
-            type="submit"
-            disabled={loading}
-            className="cursor-pointer inline-flex items-center justify-center gap-2 rounded-lg transition px-5 py-3.5 text-sm bg-blue-500 text-white ring-1 ring-inset ring-gray-300 hover:bg-blue-600">Add Movie</button>
+              type="button"
+              onClick={handleRemove}
+              disabled={loading}
+              className="cursor-pointer inline-flex items-center justify-center gap-2 rounded-lg transition px-5 py-3.5 text-sm bg-white text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+            >
+              remove
+            </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="cursor-pointer inline-flex items-center justify-center gap-2 rounded-lg transition px-5 py-3.5 text-sm bg-blue-600 text-white hover:bg-blue-700"
+            >
+              Add Movie
+            </button>
           </div>
         </div>
       </form>
