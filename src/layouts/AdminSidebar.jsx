@@ -195,15 +195,28 @@ export default function AdminSidebar() {
 
               <Collapsible isOpen={isOpen === "cinemas"} duration={chevronDuration} easing={chevronEasing}>
                 <ul id="cinemas-collapse" className="py-2.5 mt-2 space-y-1 ml-3 text-gray-700 text-sm font-medium">
+
                   <li>
-                    <a className="block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-gray-100">Cinemas List</a>
+                    <a className="block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-gray-100">
+                      Cinemas List
+                    </a>
                   </li>
+
                   <li>
-                    <a className="block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-gray-100">Screening Rooms</a>
+                    <NavLink
+                      to="/screens"
+                      className="block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-gray-100"
+                    >
+                      Screening Rooms
+                    </NavLink>
                   </li>
+
                   <li>
-                    <a className="block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-gray-100">Showtimes</a>
+                    <a className="block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-gray-100">
+                      Showtimes
+                    </a>
                   </li>
+
                 </ul>
               </Collapsible>
             </li>
