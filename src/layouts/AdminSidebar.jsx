@@ -230,9 +230,9 @@ export default function AdminSidebar() {
                   className="py-2.5 mt-2 space-y-1 ml-3 text-gray-700 text-sm font-medium"
                 >
                   <li>
-                    <a className="block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-gray-100">
+                    <NavLink className="block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-gray-100" to="/theaterList">
                       Theater List
-                    </a>
+                    </NavLink>
                   </li>
                 </ul>
               </Collapsible>
