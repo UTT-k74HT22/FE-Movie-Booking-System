@@ -45,6 +45,7 @@ function Collapsible({
     if (isOpen) doOpen();
     else doClose();
   }, [isOpen]);
+
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -133,7 +134,7 @@ export default function AdminSidebar() {
                   Movies
                 </span>
 
-                {/* svg chevron - style inline to sync duration/easing */}
+
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -184,19 +185,19 @@ export default function AdminSidebar() {
               </Collapsible>
             </li>
 
-            {/* Cinemas */}
+            {/* theater */}
             <li>
               <button
-                onClick={() => toggleMenu("cinemas")}
+                onClick={() => toggleMenu("theater")}
                 className="group px-3 py-2 flex items-center gap-3 w-full rounded-lg hover:bg-gray-100"
-                aria-expanded={isOpen === "cinemas"}
-                aria-controls="cinemas-collapse"
+                aria-expanded={isOpen === "theater"}
+                aria-controls="theater-collapse"
               >
                 <span className="text-gray-500">
-                  <i className="fi fi-rr-video-camera text-base" />
+                  <i className="fi fi-rr-stage-theatre" />
                 </span>
                 <span className="text-gray-700 text-sm font-medium">
-                  Cinemas
+                  Theater
                 </span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -204,7 +205,7 @@ export default function AdminSidebar() {
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
                   stroke="currentColor"
-                  className={arrowClass(isOpen === "cinemas")}
+                  className={arrowClass(isOpen === "theater")}
                   style={{
                     width: 18,
                     height: 18,
@@ -220,33 +221,177 @@ export default function AdminSidebar() {
               </button>
 
               <Collapsible
-                isOpen={isOpen === "cinemas"}
+                isOpen={isOpen === "theater"}
                 duration={chevronDuration}
                 easing={chevronEasing}
               >
                 <ul
-                  id="cinemas-collapse"
+                  id="theater-collapse"
                   className="py-2.5 mt-2 space-y-1 ml-3 text-gray-700 text-sm font-medium"
                 >
                   <li>
                     <a className="block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-gray-100">
-                      Cinemas List
+                      Theater List
                     </a>
                   </li>
+                </ul>
+              </Collapsible>
+            </li>
+            {/* screen */}
+            <li>
+              <button
+                onClick={() => toggleMenu("Screen")}
+                className="group px-3 py-2 flex items-center gap-3 w-full rounded-lg hover:bg-gray-100"
+                aria-expanded={isOpen === "Screen"}
+                aria-controls="Screen-collapse"
+              >
+                <span className="text-gray-500">
+                  <i className="fi fi-rr-screen" />
+                </span>
+                <span className="text-gray-700 text-sm font-medium">
+                  Screen
+                </span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className={arrowClass(isOpen === "Screen")}
+                  style={{
+                    width: 18,
+                    height: 18,
+                    transition: `transform ${chevronDuration}ms ${chevronEasing}`,
+                  }}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                  />
+                </svg>
+              </button>
+
+              <Collapsible
+                isOpen={isOpen === "Screen"}
+                duration={chevronDuration}
+                easing={chevronEasing}
+              >
+                <ul
+                  id="Screen-collapse"
+                  className="py-2.5 mt-2 space-y-1 ml-3 text-gray-700 text-sm font-medium"
+                >
                   <li>
                     <a className="block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-gray-100">
-                      Screening Rooms
-                    </a>
-                  </li>
-                  <li>
-                    <a className="block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-gray-100">
-                      Showtimes
+                      Screen List
                     </a>
                   </li>
                 </ul>
               </Collapsible>
             </li>
 
+            {/* Showtime */}
+            <li>
+              <button
+                onClick={() => toggleMenu("Showtime")}
+                className="group px-3 py-2 flex items-center gap-3 w-full rounded-lg hover:bg-gray-100"
+                aria-expanded={isOpen === "Showtime"}
+                aria-controls="Showtime-collapse"
+              >
+                <span className="text-gray-500">
+                  <i className="fi fi-rr-calendar-clock" />
+                </span>
+                <span className="text-gray-700 text-sm font-medium">
+                  Showtime
+                </span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className={arrowClass(isOpen === "Showtime")}
+                  style={{
+                    width: 18,
+                    height: 18,
+                    transition: `transform ${chevronDuration}ms ${chevronEasing}`,
+                  }}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                  />
+                </svg>
+              </button>
+
+              <Collapsible
+                isOpen={isOpen === "Showtime"}
+                duration={chevronDuration}
+                easing={chevronEasing}
+              >
+                <ul
+                  id="Showtime-collapse"
+                  className="py-2.5 mt-2 space-y-1 ml-3 text-gray-700 text-sm font-medium"
+                >
+                  <li>
+                    <a className="block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-gray-100">
+                      Showtime List
+                    </a>
+                  </li>
+                </ul>
+              </Collapsible>
+            </li>
+            {/* Seats */}
+            <li>
+              <button
+                onClick={() => toggleMenu("Seats")}
+                className="group px-3 py-2 flex items-center gap-3 w-full rounded-lg hover:bg-gray-100"
+                aria-expanded={isOpen === "Seats"}
+                aria-controls="Seats-collapse"
+              >
+                <span className="text-gray-500">
+                  <i className="fi fi-rr-seat-airline" />
+                </span>
+                <span className="text-gray-700 text-sm font-medium">Seats</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className={arrowClass(isOpen === "Seats")}
+                  style={{
+                    width: 18,
+                    height: 18,
+                    transition: `transform ${chevronDuration}ms ${chevronEasing}`,
+                  }}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                  />
+                </svg>
+              </button>
+
+              <Collapsible
+                isOpen={isOpen === "Seats"}
+                duration={chevronDuration}
+                easing={chevronEasing}
+              >
+                <ul
+                  id="Seats-collapse"
+                  className="py-2.5 mt-2 space-y-1 ml-3 text-gray-700 text-sm font-medium"
+                >
+                  <li>
+                    <a className="block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-gray-100">
+                      Seats List
+                    </a>
+                  </li>
+                </ul>
+              </Collapsible>
+            </li>
             {/* Booking */}
             <li>
               <button
@@ -256,7 +401,7 @@ export default function AdminSidebar() {
                 aria-controls="booking-collapse"
               >
                 <span className="text-gray-500">
-                  <i className="fi fi-rr-calendar-clock text-base" />
+                  <i className="fi fi-rr-ticket" />
                 </span>
                 <span className="text-gray-700 text-sm font-medium">
                   Booking
