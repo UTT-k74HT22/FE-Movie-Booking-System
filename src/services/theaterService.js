@@ -7,3 +7,11 @@ export const getTheaters = async (params) => {
         throw error.response;
     }
 };
+
+export const addTheater = async (data) => {
+  try {
+    return await axiosInstance.post("/theaters", data);
+    } catch (error) {
+        throw error.response;
+    }
+};
