@@ -1,0 +1,90 @@
+/* Badge Component Styles */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: var(--text-body-sm);
+  font-weight: var(--font-bold);
+  white-space: nowrap;
+  transition: all var(--transition-base);
+}
+
+.badge-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+}
+
+/* Rating Badge */
+.badge-rating {
+  background: var(--rating-bg);
+  color: var(--rating-gold);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Age Rating Badge */
+.badge-age {
+  background: var(--age-rating-bg);
+  color: var(--purple-light);
+  border: 1px solid var(--purple-primary);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Genre Badge */
+.badge-genre {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--gray-300);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Success Badge */
+.badge-success {
+  background: rgba(16, 185, 129, 0.2);
+  color: var(--success-light);
+  border: 1px solid var(--success-dark);
+}
+
+/* Warning Badge */
+.badge-warning {
+  background: rgba(245, 158, 11, 0.2);
+  color: var(--warning-light);
+  border: 1px solid var(--warning-dark);
+}
+
+/* Error Badge */
+.badge-error {
+  background: rgba(239, 68, 68, 0.2);
+  color: var(--error-light);
+  border: 1px solid var(--error-dark);
+}
+
+/* Info Badge */
+.badge-info {
+  background: rgba(14, 165, 233, 0.2);
+  color: var(--info-light);
+  border: 1px solid var(--info-dark);
+}
+
+/* Hover Effects */
+.badge:hover {
+  transform: scale(1.05);
+}
+
+/* Sizes */
+.badge-sm {
+  padding: 2px 8px;
+  font-size: var(--text-body-xs);
+}
+
+.badge-lg {
+  padding: 6px 16px;
+  font-size: var(--text-body-md);
+}
