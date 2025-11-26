@@ -111,10 +111,13 @@ class TokenService {
   getUserFromToken() {
     const payload = this.getTokenPayload();
     return payload ? {
-      id: payload.sub,
-      email: payload.email,
-      roles: payload.roles || [],
-      ...payload,
+      id: payload.accountId,
+      username: payload.sub,
+      roles: Array.isArray(payload.roles) 
+      ? payload.roles
+      : payload.roles
+      ? [payload.roles]
+      : [],
     } : null;
   }
 }
