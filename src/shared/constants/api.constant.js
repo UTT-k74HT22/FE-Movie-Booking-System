@@ -6,23 +6,23 @@
 export const API_ENDPOINTS = {
   // Authentication
   AUTH: {
-    LOGIN: '/auth/login',
-    REGISTER: '/auth/register',
-    LOGOUT: '/auth/logout',
-    REFRESH_TOKEN: '/auth/refresh-token',
-    FORGOT_PASSWORD: '/auth/forgot-password',
-    RESET_PASSWORD: '/auth/reset-password',
-    ACTIVATE: '/auth/activate',
-    ME: '/auth/me',
+    LOGIN: '/v1/auth/login',
+    REGISTER: '/v1/auth/register',
+    LOGOUT: '/v1/auth/logout',
+    REFRESH_TOKEN: '/v1/auth/refresh-token',
+    FORGOT_PASSWORD: '/v1/auth/forgot-password',
+    RESET_PASSWORD: '/v1/auth/reset-password',
+    ACTIVATE: '/v1/auth/activate',
+    ME: '/v1/auth/me',
   },
 
   // Movies
   MOVIES: {
-    BASE: '/movies',
-    BY_ID: (id) => `/movies/${id}`,
-    SEARCH: '/movies/search',
-    POPULAR: '/movies/popular',
-    UPCOMING: '/movies/upcoming',
+    BASE: '/v1/movies',
+    BY_ID: (id) => `/v1/movies/${id}`,
+    SEARCH: 'v1//movies/search',
+    POPULAR: '/v1/movies/popular',
+    UPCOMING: '/v1/movies/upcoming',
   },
 
   // Bookings
