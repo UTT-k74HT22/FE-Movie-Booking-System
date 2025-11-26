@@ -15,7 +15,7 @@ const LoginPage = () => {
   return (
     <div className="relative overflow-hidden h-screen bg-purple-animated">
       <div className="flex h-full justify-center items-center px-4">
-        <div className="rounded-xl shadow-md bg-white dark:bg-darkgray p-6 w-full md:w-96 border-none">
+        <div className="rounded-xl shadow-md bg-white p-6 w-full md:w-96 border-none">
           <div className="flex flex-col gap-2 p-0 w-full">
             <div className="mx-auto flex items-center justify-center gap-2">
               <div className="text-blue-500">
