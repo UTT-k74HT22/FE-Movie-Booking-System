@@ -1,0 +1,381 @@
+/* BrowseShowtimePage Styles */
+
+.browse-showtime-page {
+  min-height: 100vh;
+  background: var(--base-black);
+  padding: var(--spacing-20) 0 var(--spacing-16);
+}
+
+.page-title {
+  font-size: var(--text-display-md);
+  font-weight: var(--font-extrabold);
+  color: var(--base-white);
+  margin-bottom: var(--spacing-12);
+}
+
+/* Selection Section */
+.selection-section {
+  margin-bottom: var(--spacing-8);
+}
+
+.selection-label {
+  display: block;
+  font-size: var(--text-h5);
+  font-weight: var(--font-bold);
+  color: var(--base-white);
+  margin-bottom: var(--spacing-4);
+}
+
+/* Theater Selection */
+.theater-dropdown {
+  position: relative;
+}
+
+.theater-select {
+  width: 100%;
+  max-width: 500px;
+  background: var(--gray-800);
+  border: 1px solid var(--gray-700);
+  color: var(--base-white);
+  padding: 14px 48px 14px 16px;
+  border-radius: var(--radius-lg);
+  font-size: var(--text-body-lg);
+  font-weight: var(--font-medium);
+  cursor: pointer;
+  appearance: none;
+  transition: all var(--transition-base);
+}
+
+.theater-select:hover {
+  border-color: var(--purple-medium);
+}
+
+.theater-select:focus {
+  border-color: var(--purple-medium);
+  box-shadow: 0 0 0 3px rgba(157, 78, 221, 0.2);
+  outline: none;
+}
+
+.dropdown-icon {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gray-400);
+  pointer-events: none;
+}
+
+/* Date Selection */
+.date-selector {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+}
+
+.date-nav-button {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gray-800);
+  border: 1px solid var(--gray-700);
+  border-radius: var(--radius-lg);
+  color: var(--base-white);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.date-nav-button:hover {
+  background: var(--gray-700);
+  border-color: var(--purple-medium);
+}
+
+.date-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--spacing-4);
+  flex: 1;
+  overflow-x: auto;
+}
+
+.date-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--gray-800);
+  border: 2px solid transparent;
+  padding: var(--spacing-4);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  min-width: 80px;
+}
+
+.date-button:hover {
+  border-color: var(--purple-medium);
+  background: var(--gray-700);
+}
+
+.date-button.active {
+  background: var(--gradient-primary);
+  border-color: var(--purple-light);
+  box-shadow: var(--shadow-purple);
+}
+
+.date-day {
+  font-size: var(--text-body-sm);
+  font-weight: var(--font-medium);
+  color: var(--gray-400);
+  text-transform: uppercase;
+  margin-bottom: var(--spacing-1);
+}
+
+.date-button.active .date-day {
+  color: var(--base-white);
+}
+
+.date-number {
+  font-size: var(--text-h4);
+  font-weight: var(--font-bold);
+  color: var(--base-white);
+}
+
+/* Showtimes Section */
+.showtimes-section {
+  margin-top: var(--spacing-12);
+}
+
+.showtimes-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-8);
+}
+
+/* Showtime Card */
+.showtime-card {
+  background: var(--gray-900);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  transition: all var(--transition-base);
+}
+
+.showtime-card:hover {
+  box-shadow: var(--shadow-2xl);
+}
+
+.showtime-card-image {
+  position: relative;
+  aspect-ratio: 21/9;
+  overflow: hidden;
+}
+
+.showtime-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.showtime-card-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(to top, var(--gray-900) 0%, transparent 100%);
+}
+
+.showtime-card-content {
+  padding: var(--spacing-8);
+}
+
+.showtime-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-6);
+}
+
+.showtime-card-title {
+  font-size: var(--text-h3);
+  font-weight: var(--font-bold);
+  color: var(--base-white);
+  flex: 1;
+}
+
+.showtime-card-meta {
+  display: flex;
+  gap: var(--spacing-2);
+}
+
+/* Info Grid */
+.showtime-card-info {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-8);
+}
+
+.showtime-info-row {
+  display: flex;
+  gap: var(--spacing-2);
+}
+
+.info-label {
+  font-size: var(--text-body-md);
+  color: var(--gray-400);
+  font-weight: var(--font-medium);
+  min-width: 120px;
+}
+
+.info-value {
+  font-size: var(--text-body-md);
+  color: var(--base-white);
+  font-weight: var(--font-bold);
+}
+
+/* Actions */
+.showtime-card-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+}
+
+.showtime-times {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: var(--spacing-3);
+}
+
+.showtime-slot {
+  background: var(--gray-800);
+  border: 1px solid var(--gray-700);
+  padding: 12px 24px;
+  border-radius: var(--radius-md);
+  font-weight: var(--font-bold);
+  font-size: var(--text-body-lg);
+  color: var(--base-white);
+  text-align: center;
+  transition: all var(--transition-base);
+  cursor: pointer;
+}
+
+.showtime-slot:hover {
+  border-color: var(--purple-medium);
+  background: var(--gray-700);
+  transform: translateY(-2px);
+}
+
+.watch-trailer-button {
+  align-self: flex-start;
+}
+
+/* Loading State */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-20);
+  gap: var(--spacing-4);
+  color: var(--gray-400);
+}
+
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid var(--gray-700);
+  border-top-color: var(--purple-medium);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .showtime-card-info {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .browse-showtime-page {
+    padding: var(--spacing-12) 0 var(--spacing-8);
+  }
+
+  .page-title {
+    font-size: var(--text-h2);
+    margin-bottom: var(--spacing-8);
+  }
+
+  .date-grid {
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+  }
+
+  .date-button {
+    min-width: 70px;
+    padding: var(--spacing-3);
+  }
+
+  .showtime-card-content {
+    padding: var(--spacing-6);
+  }
+
+  .showtime-card-title {
+    font-size: var(--text-h4);
+  }
+
+  .showtime-times {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .watch-trailer-button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .date-nav-button {
+    width: 40px;
+    height: 40px;
+  }
+
+  .date-grid {
+    gap: var(--spacing-2);
+  }
+
+  .date-button {
+    min-width: 60px;
+    padding: var(--spacing-2);
+  }
+
+  .date-day {
+    font-size: var(--text-body-xs);
+  }
+
+  .date-number {
+    font-size: var(--text-h5);
+  }
+
+  .info-label {
+    min-width: 100px;
+    font-size: var(--text-body-sm);
+  }
+
+  .info-value {
+    font-size: var(--text-body-sm);
+  }
+
+  .showtime-times {
+    grid-template-columns: 1fr;
+  }
+}

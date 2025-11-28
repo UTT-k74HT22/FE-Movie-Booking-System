@@ -1,0 +1,104 @@
+/* MovieGrid Component Styles */
+
+.movie-grid-section {
+  padding: var(--spacing-16) 0;
+}
+
+.movie-grid-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-8);
+}
+
+.movie-grid-title {
+  font-size: var(--text-h2);
+  font-weight: var(--font-bold);
+  color: var(--base-white);
+}
+
+.movie-grid-view-all {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  color: var(--purple-light);
+  font-size: var(--text-body-lg);
+  font-weight: var(--font-medium);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  padding: var(--spacing-2) var(--spacing-4);
+  border-radius: var(--radius-md);
+}
+
+.movie-grid-view-all:hover {
+  color: var(--base-white);
+  background: rgba(157, 78, 221, 0.1);
+  transform: translateX(4px);
+}
+
+.movie-grid-view-all svg {
+  transition: transform var(--transition-base);
+}
+
+.movie-grid-view-all:hover svg {
+  transform: translateX(4px);
+}
+
+/* Grid */
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--spacing-6);
+}
+
+@media (min-width: 640px) {
+  .movie-grid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .movie-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+}
+
+@media (min-width: 1280px) {
+  .movie-grid {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  }
+}
+
+/* Empty State */
+.movie-grid-empty {
+  text-align: center;
+  padding: var(--spacing-16) var(--spacing-4);
+  color: var(--gray-400);
+  font-size: var(--text-body-lg);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .movie-grid-section {
+    padding: var(--spacing-12) 0;
+  }
+
+  .movie-grid-header {
+    margin-bottom: var(--spacing-6);
+  }
+
+  .movie-grid-title {
+    font-size: var(--text-h3);
+  }
+
+  .movie-grid-view-all {
+    font-size: var(--text-body-md);
+  }
+
+  .movie-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-4);
+  }
+}
