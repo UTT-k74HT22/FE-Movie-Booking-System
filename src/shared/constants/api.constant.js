@@ -20,9 +20,24 @@ export const API_ENDPOINTS = {
   MOVIES: {
     BASE: '/v1/movies',
     BY_ID: (id) => `/v1/movies/${id}`,
-    SEARCH: 'v1//movies/search',
+    SEARCH: '/v1/movies/search',
     POPULAR: '/v1/movies/popular',
     UPCOMING: '/v1/movies/upcoming',
+  },
+
+  // Showtimes
+  SHOWTIMES: {
+    BASE: '/v1/showtimes',
+    BY_ID: (id) => `/v1/showtimes/${id}`,
+    BY_MOVIE: (movieId) => `/v1/showtimes?movieId=${movieId}`,
+    BY_THEATER_AND_MOVIE: (theaterId, movieId, date) => 
+      `/v1/showtimes?theaterId=${theaterId}&movieId=${movieId}&date=${date}`,
+  },
+
+  // Theaters
+  THEATERS: {
+    BASE: '/v1/theaters',
+    BY_ID: (id) => `/v1/theaters/${id}`,
   },
 
   // Bookings
