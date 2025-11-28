@@ -8,7 +8,15 @@ import { API_ENDPOINTS } from '../../../shared/constants';
 
 class MovieService {
   /**
-   * Get all movies with pagination
+   * Get all movies with pagination and filters
+   * @param {Object} params - Query parameters
+   * @param {number} params.page - Page number (0-based for backend)
+   * @param {number} params.size - Page size
+   * @param {string} params.sortBy - Sort field (title, releaseDate, rating)
+   * @param {string} params.sortDir - Sort direction (asc, desc)
+   * @param {string} params.genre - Filter by genre
+   * @param {string} params.status - Filter by status (NOW_SHOWING, COMING_SOON)
+   * @param {string} params.search - Search query
    */
   async getMovies(params = {}) {
     try {
