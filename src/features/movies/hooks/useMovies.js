@@ -1,6 +1,6 @@
 /**
  * useMovies Hook
- * Movies data fetching and management
+ * Custom hook for fetching and managing movies with pagination, filters, and search
  */
 
 import { useState, useEffect, useCallback } from 'react';
@@ -12,64 +12,106 @@ export const useMovies = (initialParams = {}) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [pagination, setPagination] = useState({
-    page: 1,
-    pageSize: 10,
-    total: 0,
+    page: 0,
+    size: 12,
+    totalElements: 0,
+    totalPages: 0,
+  });
+  
+  const [filters, setFilters] = useState({
+    sortBy: initialParams.sortBy || 'releaseDate',
+    sortDir: initialParams.sortDir || 'desc',
+    genre: initialParams.genre || '',
+    status: initialParams.status || '',
+    search: initialParams.search || '',
   });
 
   /**
-   * Fetch movies
+   * Fetch movies with current filters and pagination
    */
-  const fetchMovies = useCallback(async (params = {}) => {
+  const fetchMovies = useCallback(async (page = 0) => {
     try {
       setLoading(true);
       setError(null);
 
       const response = await movieService.getMovies({
-        ...initialParams,
-        ...params,
+        page,
+        size: pagination.size,
+        ...filters,
       });
 
-      setMovies(response.data || response.content || []);
+      // Handle different response structures
+      const moviesData = response.data?.content || response.content || response.data || [];
+      setMovies(moviesData);
       
-      if (response.pagination) {
-        setPagination(response.pagination);
+      // Update pagination
+      if (response.data?.page !== undefined) {
+        setPagination({
+          page: response.data.page || 0,
+          size: response.data.size || 12,
+          totalElements: response.data.totalElements || 0,
+          totalPages: response.data.totalPages || 0,
+        });
+      } else if (response.page !== undefined) {
+        setPagination({
+          page: response.page || 0,
+          size: response.size || 12,
+          totalElements: response.totalElements || 0,
+          totalPages: response.totalPages || 0,
+        });
       }
     } catch (err) {
-      const message = err.message || 'Failed to fetch movies';
+      const message = err.response?.data?.message || err.message || 'Failed to fetch movies';
       setError(message);
-      toast.error(message);
+      console.error('Error fetching movies:', err);
     } finally {
       setLoading(false);
     }
-  }, [initialParams]);
+  }, [filters, pagination.size]);
 
   /**
-   * Initial fetch
+   * Initial fetch on filters change
    */
   useEffect(() => {
-    fetchMovies();
-  }, [fetchMovies]);
+    fetchMovies(pagination.page);
+  }, [filters]);
+
+  /**
+   * Change page
+   */
+  const handlePageChange = (newPage) => {
+    fetchMovies(newPage);
+  };
+
+  /**
+   * Update filters
+   */
+  const handleFilterChange = (newFilters) => {
+    setFilters((prev) => ({ ...prev, ...newFilters }));
+    setPagination((prev) => ({ ...prev, page: 0 })); // Reset to first page
+  };
+
+  /**
+   * Search movies
+   */
+  const handleSearch = (searchQuery) => {
+    setFilters((prev) => ({ ...prev, search: searchQuery }));
+    setPagination((prev) => ({ ...prev, page: 0 }));
+  };
+
+  /**
+   * Change sort
+   */
+  const handleSort = (sortBy, sortDir = 'desc') => {
+    setFilters((prev) => ({ ...prev, sortBy, sortDir }));
+    setPagination((prev) => ({ ...prev, page: 0 }));
+  };
 
   /**
    * Refetch movies
    */
   const refetch = () => {
-    fetchMovies();
-  };
-
-  /**
-   * Change page
-   */
-  const changePage = (page) => {
-    fetchMovies({ page });
-  };
-
-  /**
-   * Change page size
-   */
-  const changePageSize = (pageSize) => {
-    fetchMovies({ page: 1, pageSize });
+    fetchMovies(pagination.page);
   };
 
   return {
@@ -77,9 +119,12 @@ export const useMovies = (initialParams = {}) => {
     loading,
     error,
     pagination,
+    filters,
+    handlePageChange,
+    handleFilterChange,
+    handleSearch,
+    handleSort,
     refetch,
-    changePage,
-    changePageSize,
   };
 };
 
