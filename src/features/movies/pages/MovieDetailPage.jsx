@@ -3,11 +3,11 @@
  * Detailed movie view with showtime booking
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ROUTES } from '../../../shared/constants';
-import { movieService } from '../services/movie.service';
 import { useAuth } from '../../auth';
+import { useMovieDetail } from '../hooks/useMovieDetail';
 import { toast } from 'react-toastify';
 
 const MovieDetailPage = () => {
@@ -15,32 +15,17 @@ const MovieDetailPage = () => {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
 
-  const [movie, setMovie] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedShowtime, setSelectedShowtime] = useState(null);
-
-  useEffect(() => {
-    loadMovie();
-  }, [id]);
-
-  const loadMovie = async () => {
-    setLoading(true);
-    try {
-      const data = await movieService.getById(id);
-      setMovie(data);
-      
-      // Set default date to today
-      const today = new Date().toISOString().split('T')[0];
-      setSelectedDate(today);
-    } catch (error) {
-      console.error('Failed to load movie:', error);
-      toast.error('Movie not found');
-      navigate(ROUTES.MOVIES);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    movie,
+    showtimes,
+    loading,
+    showtimesLoading,
+    error,
+    selectedDate,
+    selectedShowtime,
+    handleDateChange,
+    handleShowtimeSelect,
+  } = useMovieDetail(id);
 
   const handleBookNow = () => {
     if (!isAuthenticated) {
@@ -54,24 +39,26 @@ const MovieDetailPage = () => {
       return;
     }
 
-    // Navigate to booking page with showtime info
-    navigate(`/booking/${movie.id}/showtime/${selectedShowtime.id}`);
+    // Navigate to seat selection page
+    navigate(`/booking/showtime/${selectedShowtime.id}`, {
+      state: { movie, showtime: selectedShowtime }
+    });
   };
 
-  // Mock showtimes (replace with real API data)
-  const mockShowtimes = [
-    { id: 1, time: '10:00 AM', available: true, price: 150000 },
-    { id: 2, time: '13:00 PM', available: true, price: 150000 },
-    { id: 3, time: '16:00 PM', available: true, price: 180000 },
-    { id: 4, time: '19:00 PM', available: false, price: 180000 },
-    { id: 5, time: '22:00 PM', available: true, price: 200000 },
-  ];
-
-  const mockDates = Array.from({ length: 7 }, (_, i) => {
+  // Generate date options (next 7 days)
+  const dateOptions = Array.from({ length: 7 }, (_, i) => {
     const date = new Date();
     date.setDate(date.getDate() + i);
     return date.toISOString().split('T')[0];
   });
+
+  // Check if movie not found
+  useEffect(() => {
+    if (!loading && error) {
+      toast.error(error);
+      navigate(ROUTES.MOVIES);
+    }
+  }, [loading, error, navigate]);
 
   if (loading) {
     return (
@@ -187,13 +174,13 @@ const MovieDetailPage = () => {
               <div className="mb-6">
                 <label className="block text-white font-semibold mb-3">Select Date</label>
                 <div className="grid grid-cols-7 gap-2">
-                  {mockDates.map((date) => {
+                  {dateOptions.map((date) => {
                     const dateObj = new Date(date);
                     const isSelected = selectedDate === date;
                     return (
                       <button
                         key={date}
-                        onClick={() => setSelectedDate(date)}
+                        onClick={() => handleDateChange(date)}
                         className={`p-2 rounded-lg text-center transition-all ${
                           isSelected
                             ? 'bg-gradient-to-r from-pink-500 to-purple-600 text-white'
@@ -211,34 +198,71 @@ const MovieDetailPage = () => {
               {/* Showtime Selection */}
               <div className="mb-6">
                 <label className="block text-white font-semibold mb-3">Select Showtime</label>
-                <div className="grid grid-cols-2 gap-3">
-                  {mockShowtimes.map((showtime) => (
-                    <button
-                      key={showtime.id}
-                      onClick={() => showtime.available && setSelectedShowtime(showtime)}
-                      disabled={!showtime.available}
-                      className={`p-3 rounded-lg text-center transition-all ${
-                        selectedShowtime?.id === showtime.id
-                          ? 'bg-gradient-to-r from-pink-500 to-purple-600 text-white ring-2 ring-pink-400'
-                          : showtime.available
-                          ? 'bg-gray-700 text-white hover:bg-gray-600'
-                          : 'bg-gray-800 text-gray-500 cursor-not-allowed'
-                      }`}
-                    >
-                      <div className="font-bold">{showtime.time}</div>
-                      <div className="text-xs">{showtime.price.toLocaleString()} VND</div>
-                    </button>
-                  ))}
-                </div>
+                
+                {showtimesLoading ? (
+                  <div className="text-center py-8">
+                    <div className="w-8 h-8 border-4 border-pink-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+                    <p className="text-gray-300 mt-2">Loading showtimes...</p>
+                  </div>
+                ) : showtimes.length === 0 ? (
+                  <div className="text-center py-8 bg-gray-800 rounded-lg">
+                    <p className="text-gray-400">No showtimes available for this date</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {showtimes.map((theaterGroup) => (
+                      <div key={theaterGroup.theater?.id} className="bg-gray-800/50 rounded-lg p-4">
+                        <h4 className="text-white font-semibold mb-3">
+                          {theaterGroup.theater?.name || 'Theater'}
+                        </h4>
+                        <div className="grid grid-cols-3 gap-2">
+                          {theaterGroup.showtimes.map((showtime) => {
+                            const startTime = new Date(showtime.startTime);
+                            const isAvailable = showtime.status === 'ACTIVE';
+                            const isSelected = selectedShowtime?.id === showtime.id;
+                            
+                            return (
+                              <button
+                                key={showtime.id}
+                                onClick={() => isAvailable && handleShowtimeSelect(showtime)}
+                                disabled={!isAvailable}
+                                className={`p-3 rounded-lg text-center transition-all ${
+                                  isSelected
+                                    ? 'bg-gradient-to-r from-pink-500 to-purple-600 text-white ring-2 ring-pink-400'
+                                    : isAvailable
+                                    ? 'bg-gray-700 text-white hover:bg-gray-600'
+                                    : 'bg-gray-800 text-gray-500 cursor-not-allowed opacity-50'
+                                }`}
+                              >
+                                <div className="font-bold text-sm">
+                                  {startTime.toLocaleTimeString('en-US', { 
+                                    hour: '2-digit', 
+                                    minute: '2-digit',
+                                    hour12: true 
+                                  })}
+                                </div>
+                                <div className="text-xs mt-1">
+                                  {showtime.price?.toLocaleString()} VND
+                                </div>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* Book Button */}
               <button
                 onClick={handleBookNow}
                 disabled={!selectedShowtime}
-                className="w-full py-4 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-xl font-bold text-lg hover:from-pink-600 hover:to-purple-700 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed transform hover:scale-105 transition-all shadow-xl"
+                className="w-full py-4 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-xl font-bold text-lg hover:from-pink-600 hover:to-purple-700 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed transform hover:scale-105 transition-all shadow-xl disabled:transform-none"
               >
-                {selectedShowtime ? `Book Now - ${selectedShowtime.price.toLocaleString()} VND` : 'Select Showtime'}
+                {selectedShowtime 
+                  ? `Book Now - ${selectedShowtime.price?.toLocaleString()} VND` 
+                  : 'Select Showtime'}
               </button>
 
               {!isAuthenticated && (
